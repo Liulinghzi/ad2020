@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-09 18:12:29
+@LastEditTime: 2020-05-09 18:27:55
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/train.py
@@ -22,6 +22,7 @@ from utils import save_hparams, save_variable_specs, get_hypotheses, calc_bleu
 import os
 from hparams import Hparams
 import math
+import time
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -47,7 +48,11 @@ train_init_op = iter.make_initializer(train_batches)
 
 logging.info("# Load model")
 m = Transformer(hp)
+print('m = Transformer(hp)')
+time.sleep(5)
 loss, train_op, global_step, train_summaries = m.train(dense_seqs, sparse_seqs, ages, genders, mask_flag)
+print('m.train')
+time.sleep(5)
 
 logging.info("# Session")
 saver = tf.train.Saver(max_to_keep=hp.num_epochs)
@@ -68,6 +73,9 @@ with tf.Session() as sess:
     sess.run(train_init_op)
     total_steps = hp.num_epochs * num_train_batches
     _gs = sess.run(global_step)
+    print('sess.run')
+    time.sleep(5)
+
     for i in tqdm(range(_gs, total_steps+1)):
         _, _gs, _summary = sess.run([train_op, global_step, train_summaries])
         epoch = math.ceil(_gs / num_train_batches)
