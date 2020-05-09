@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-09 18:12:01
+@LastEditTime: 2020-05-09 18:12:29
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/train.py
@@ -43,7 +43,7 @@ iter = tf.data.Iterator.from_structure(train_batches.output_types, train_batches
 dense_seqs, sparse_seqs, ages, genders, mask_flag = iter.get_next()
 
 train_init_op = iter.make_initializer(train_batches)
-eval_init_op = iter.make_initializer(eval_batches)
+# eval_init_op = iter.make_initializer(eval_batches)
 
 logging.info("# Load model")
 m = Transformer(hp)
