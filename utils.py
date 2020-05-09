@@ -82,9 +82,8 @@ def save_hparams(hparams, path):
     hparams as literal dictionary to path.
     '''
     if not os.path.exists(path): os.makedirs(path)
-    hp = json.dumps(vars(hparams))
     with open(os.path.join(path, "hparams"), 'w') as fout:
-        fout.write(hp)
+        fout.write(json.dumps(vars(hparams)))
 
 def load_hparams(parser, path):
     '''Loads hparams and overrides parser
