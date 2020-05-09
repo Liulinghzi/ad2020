@@ -1,7 +1,7 @@
 ###
  # @Author: your name
  # @Date: 2020-05-09 15:28:53
- # @LastEditTime: 2020-05-09 17:55:12
+ # @LastEditTime: 2020-05-09 18:09:05
  # @LastEditors: Please set LastEditors
  # @Description: In User Settings Edit
  # @FilePath: /ad2020/run.sh
@@ -14,7 +14,7 @@ python3 train.py \
 ## files
 --train_dense_path 5-8/train_dense_seqs.pkl\
 --train_sparse_path 5-8/train_sparse_seqs.pkl\
---train_age_gender 5-8/train_age_gender.pkl\
+--train_age_gender_path 5-8/train_age_gender.pkl\
 # # test
 # --test\
 # --ckpt\
