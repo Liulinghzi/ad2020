@@ -15,7 +15,7 @@ import json
 import os, re
 import logging
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.ERROR)
 
 def calc_num_batches(total_num, batch_size):
     '''Calculates the number of batches.
