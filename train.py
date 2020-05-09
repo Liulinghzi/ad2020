@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-09 18:28:51
+@LastEditTime: 2020-05-09 18:29:44
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/train.py
@@ -37,11 +37,11 @@ save_hparams(hp, hp.logdir)
 
 logging.info("# Prepare train/eval batches")
 print('param')
-time.sleep(5)
+exit()
 train_batches, num_train_batches, num_train_samples = get_batch(hp.train_dense_path, hp.train_sparse_path, hp.train_age_gender_path, hp.maxlen, hp.batch_size, shuffle=True)
 # eval_batches, num_eval_batches, num_eval_samples = get_batch(hp.eval_dense_path, hp.eval_sparse_path, hp.eval_age_gender_path, 100000 , hp.batch_size, shuffle=False)
 print('get batch')
-time.sleep(5)
+exit()
 
 # create a iterator of the correct shape and type
 iter = tf.data.Iterator.from_structure(train_batches.output_types, train_batches.output_shapes)
@@ -53,10 +53,10 @@ train_init_op = iter.make_initializer(train_batches)
 logging.info("# Load model")
 m = Transformer(hp)
 print('m = Transformer(hp)')
-time.sleep(5)
+exit()
 loss, train_op, global_step, train_summaries = m.train(dense_seqs, sparse_seqs, ages, genders, mask_flag)
 print('m.train')
-time.sleep(5)
+exit()
 
 logging.info("# Session")
 saver = tf.train.Saver(max_to_keep=hp.num_epochs)
