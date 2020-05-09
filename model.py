@@ -19,18 +19,6 @@ import pickle
 logging.basicConfig(level=logging.INFO)
 
 class Transformer:
-    '''
-    xs: tuple of
-        x: int32 tensor. (N, T1)
-        x_seqlens: int32 tensor. (N,)
-        sents1: str tensor. (N,)
-    ys: tuple of
-        decoder_input: int32 tensor. (N, T2)
-        y: int32 tensor. (N, T2)
-        y_seqlen: int32 tensor. (N, )
-        sents2: str tensor. (N,)
-    training: boolean.
-    '''
     def __init__(self, hp):
         self.hp = hp
         with open(self.hp.vocab_list, 'rb') as f:
@@ -146,32 +134,21 @@ class Transformer:
 
         return loss, train_op, global_step, summaries
 
-    # def eval(self, xs, ys):
-    #     '''Predicts autoregressively
-    #     At inference, input ys is ignored.
-    #     Returns
-    #     y_hat: (N, T2)
-    #     '''
-    #     memory, sents1, src_masks = self.encode(xs, False)
+    def eval(self, xs, y_age, y_gender):
+        '''Predicts autoregressively
+        At inference, input ys is ignored.
+        Returns
+        y_hat: (N, T2)
+        '''
+        age_logits, gender_logits, src_masks = self.encode(xs, False)
 
-    #     logging.info("Inference graph is being built. Please be patient.")
-    #     for _ in tqdm(range(self.hp.maxlen2)):
-    #         logits, y_hat, y, sents2 = self.decode(ys, memory, src_masks, False)
-    #         if tf.reduce_sum(y_hat, 1) == self.token2idx["<pad>"]: break
+        logging.info("Inference graph is being built. Please be patient.")
+        pred_age = tf.argmax(age_logits, axis=1)
+        pred_gender = tf.argmax(gender_logits, axis=1)
+        # monitor a random sample
 
-    #         _decoder_inputs = tf.concat((decoder_inputs, y_hat), 1)
-    #         ys = (_decoder_inputs, y, y_seqlen, sents2)
+        tf.summary.text("pred", pred)
+        summaries = tf.summary.merge_all()
 
-    #     # monitor a random sample
-    #     n = tf.random_uniform((), 0, tf.shape(y_hat)[0]-1, tf.int32)
-    #     sent1 = sents1[n]
-    #     pred = convert_idx_to_token_tensor(y_hat[n], self.idx2token)
-    #     sent2 = sents2[n]
-
-    #     tf.summary.text("sent1", sent1)
-    #     tf.summary.text("pred", pred)
-    #     tf.summary.text("sent2", sent2)
-    #     summaries = tf.summary.merge_all()
-
-    #     return y_hat, summaries
+        return y_hat, summaries
 
