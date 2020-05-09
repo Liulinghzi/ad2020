@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-09 14:02:59
-@LastEditTime: 2020-05-09 17:01:33
+@LastEditTime: 2020-05-09 18:32:32
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/data_load.py
@@ -68,6 +68,8 @@ def input_fn(dense_seqs, sparse_seqs, age_gender, batch_size, shuffle=False):
 
 def get_batch(dense_seqs_path, sparse_seqs_path, age_gender_path, maxlen, batch_size, shuffle=False):
     dense_seqs, sparse_seqs = load_data(dense_seqs_path, sparse_seqs_path, maxlen)
+    print('load dara')
+    exit()
     age_gender = load_target(age_gender_path)
     # 这里的behavior_seqs需要时已经构建好的list [[1,1,1,1], [2,2,2,2]]
     batches = input_fn(dense_seqs, sparse_seqs, age_gender, batch_size, shuffle=shuffle)
