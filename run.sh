@@ -1,7 +1,7 @@
 ###
  # @Author: your name
  # @Date: 2020-05-09 15:28:53
- # @LastEditTime: 2020-05-09 16:18:03
+ # @LastEditTime: 2020-05-09 17:47:01
  # @LastEditors: Please set LastEditors
  # @Description: In User Settings Edit
  # @FilePath: /ad2020/run.sh
@@ -12,27 +12,27 @@ python3 train.py \
 
 # train
 ## files
---train\
---train_age_gender\
-# test
---test\
---ckpt\
---testdir\
+--train_dense_path 5-8/train_dense_seqs.pkl\
+--train_sparse_path 5-8/train_sparse_seqs.pkl\
+--train_age_gender 5-8/train_age_gender.pkl\
+# # test
+# --test\
+# --ckpt\
+# --testdir\
 # training scheme
 --batch_size 128\
---lr\
---warmup_steps\
---logdir\
---num_epochs\
+# --lr\
+# --warmup_steps\
+# --logdir\
+--num_epochs 1\
 
 # model
---d_model\
---d_ff\
---num_blocks\
---num_heads\
+--d_model 32\
+--d_ff 32\
+--num_blocks 1\
+--num_heads 1\
 --maxlen 50\
 --dropout_rate\
---smoothing\
---age_classes\
---gender_classes\
---age_classes\
+# --smoothing\
+--age_classes 2\
+--gender_classes 10\

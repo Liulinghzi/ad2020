@@ -138,22 +138,22 @@ class Transformer:
 
         return loss, train_op, global_step, summaries
 
-    def eval(self, x, y_age, y_gender):
-        '''Predicts autoregressively
-        At inference, input ys is ignored.
-        Returns
-        y_hat: (N, T2)
-        '''
-        age_logits, gender_logits, src_masks = self.encode(x, False)
+    # def eval(self, x, y_age, y_gender):
+    #     '''Predicts autoregressively
+    #     At inference, input ys is ignored.
+    #     Returns
+    #     y_hat: (N, T2)
+    #     '''
+    #     age_logits, gender_logits, src_masks = self.encode(x, False)
 
-        logging.info("Inference graph is being built. Please be patient.")
-        pred_age = tf.argmax(age_logits, axis=1)
-        pred_gender = tf.argmax(gender_logits, axis=1)
-        # monitor a random sample
+    #     logging.info("Inference graph is being built. Please be patient.")
+    #     pred_age = tf.argmax(age_logits, axis=1)
+    #     pred_gender = tf.argmax(gender_logits, axis=1)
+    #     # monitor a random sample
 
-        tf.summary.text("pred_age", pred_age)
-        tf.summary.text("pred_gender", pred_gender)
-        summaries = tf.summary.merge_all()
+    #     tf.summary.text("pred_age", pred_age)
+    #     tf.summary.text("pred_gender", pred_gender)
+    #     summaries = tf.summary.merge_all()
 
-        return pred_age, pred_gender, summaries
+    #     return pred_age, pred_gender, summaries
 

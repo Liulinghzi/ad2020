@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-09 17:01:09
+@LastEditTime: 2020-05-09 17:06:22
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/train.py
@@ -50,7 +50,7 @@ loss, train_op, global_step, train_summaries = m.train(dense_seqs, sparse_seqs, 
 
 logging.info("# Session")
 saver = tf.train.Saver(max_to_keep=hp.num_epochs)
-y_hat, eval_summaries = m.eval(xs, ys)
+# y_hat, eval_summaries = m.eval(xs, ys)
 # y_hat = m.infer(xs, ys)
 
 with tf.Session() as sess:
@@ -76,22 +76,22 @@ with tf.Session() as sess:
             logging.info("epoch {} is done".format(epoch))
             _loss = sess.run(loss) # train loss
 
-            logging.info("# test evaluation")
-            _, _eval_summaries = sess.run([eval_init_op, eval_summaries])
-            summary_writer.add_summary(_eval_summaries, _gs)
+            # logging.info("# test evaluation")
+            # _, _eval_summaries = sess.run([eval_init_op, eval_summaries])
+            # summary_writer.add_summary(_eval_summaries, _gs)
 
-            logging.info("# get hypotheses")
-            hypotheses = get_hypotheses(num_eval_batches, num_eval_samples, sess, y_hat, m.idx2token)
+            # logging.info("# get hypotheses")
+            # hypotheses = get_hypotheses(num_eval_batches, num_eval_samples, sess, y_hat, m.idx2token)
 
-            logging.info("# write results")
-            model_output = "iwslt2016_E%02dL%.2f" % (epoch, _loss)
-            if not os.path.exists(hp.evaldir): os.makedirs(hp.evaldir)
-            translation = os.path.join(hp.evaldir, model_output)
-            with open(translation, 'w') as fout:
-                fout.write("\n".join(hypotheses))
+            # logging.info("# write results")
+            # model_output = "iwslt2016_E%02dL%.2f" % (epoch, _loss)
+            # if not os.path.exists(hp.evaldir): os.makedirs(hp.evaldir)
+            # translation = os.path.join(hp.evaldir, model_output)
+            # with open(translation, 'w') as fout:
+            #     fout.write("\n".join(hypotheses))
 
-            logging.info("# calc bleu score and append it to translation")
-            calc_bleu(hp.eval3, translation)
+            # logging.info("# calc bleu score and append it to translation")
+            # calc_bleu(hp.eval3, translation)
 
             logging.info("# save models")
             ckpt_name = os.path.join(hp.logdir, model_output)
