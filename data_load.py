@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-09 14:02:59
-@LastEditTime: 2020-05-09 18:33:29
+@LastEditTime: 2020-05-09 18:34:02
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/data_load.py
@@ -52,13 +52,13 @@ def input_fn(dense_seqs, sparse_seqs, age_gender, batch_size, shuffle=False):
         (0, 0, 0, 0, 0)
         )
     print(1)
+    exit()
     dataset = tf.data.Dataset.from_generator(
         generator_fn,
         output_shapes=shapes,
         output_types=types,
         args=(dense_seqs, sparse_seqs, age_gender))  # <- arguments for generator_fn. converted to np string arrays
     print(2)
-    exit()
 
     if shuffle: # for training
         dataset = dataset.shuffle(128*batch_size)
