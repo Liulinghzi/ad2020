@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-09 17:06:22
+@LastEditTime: 2020-05-09 18:00:56
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/train.py
@@ -32,6 +32,7 @@ hparams = Hparams()
 parser = hparams.parser
 hp = parser.parse_args()
 save_hparams(hp, hp.logdir)
+print(hp)
 
 logging.info("# Prepare train/eval batches")
 train_batches, num_train_batches, num_train_samples = get_batch(hp.train_dense_path, hp.train_sparse_path, hp.train_age_gender_path, hp.maxlen, hp.batch_size, shuffle=True)

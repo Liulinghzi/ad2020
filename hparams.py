@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-09 17:58:34
+@LastEditTime: 2020-05-09 18:00:11
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/hparams.py
@@ -9,7 +9,6 @@
 import argparse
 
 class Hparams:
-    print('arrive')
     parser = argparse.ArgumentParser()
 
     # prepro
