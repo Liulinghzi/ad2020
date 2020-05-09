@@ -21,24 +21,27 @@ logging.basicConfig(level=logging.INFO)
 class Transformer:
     def __init__(self, hp):
         self.hp = hp
+
         with open(self.hp.vocab_list, 'rb') as f:
             self.hp.vocab_list = pickle.load(f)
+        # 前两个特征是dense，1维
         self.embedding_list = [get_token_embeddings(self.hp.vocab_dict[i], self.hp.d_model, zero_pad=True) for i in range(len(self.hp.vocab_list))]
         '''
         这里就不只是一个embeddings了而是
         self.embedding_dict = {feat: get_token_embeddings for feat in features}
         '''
 
-    def encode(self, xs, training=True):
+    def encode(self, dense_seqs, sparse_seqs, mask_flag, training=True):
         '''
         Returns
         memory: encoder outputs. (N, T1, d_model)
         '''
         with tf.variable_scope("encoder", reuse=tf.AUTO_REUSE):
-            x, seqlens = xs
 
             # src_masks
-            src_masks = tf.math.equal(x, 0) # (N, T1)
+            # dense_seqs形状为[bs, seq_len, 2]
+            # 在get_batch的时候用了0来作为pad
+            src_masks = tf.math.equal(mask_flag, 0) # (N, T1)
 
             # embedding
             # x的形状为[
@@ -49,11 +52,12 @@ class Transformer:
             # ]
             # [bs, maxlen, feat_num]
             # 需要在feat_num的维度进行切分，分别lookup，再FM和concate，FM以后在加
-            splited_x = tf.split(axis=2, value=x, num_split=x.shape[2])
-            splited_x = [tf.reshape(xi, (-1, xi.shape[1])) for xi in splited_x]
+            splited_sparse = tf.split(axis=2, value=sparse_seqs, num_split=sparse_seqs.shape[2])
+            splited_sparse = [tf.reshape(xi, (-1, xi.shape[1])) for xi in splited_sparse]
 
-            encs = [tf.nn.embedding_lookup(self.embedding_list[i], x[i]) for i in range(len(splited_x))]
+            encs = [tf.nn.embedding_lookup(self.embedding_list[i], splited_sparse[i]) for i in range(len(splited_sparse))]
             # lookup后每个encs应该是 [[emb][emb]]
+            encs.append(dense_seqs)
 
             enc = tf.concat(concat_dim=1, values=encs)
             # concate之后应该是[con_emb, con_emb]
@@ -100,7 +104,7 @@ class Transformer:
         
         return age_logits, gender_logits, src_masks
 
-    def train(self, xs, y_age, y_gender):
+    def train(self, dense_seqs, sparse_seqs, age, gender, mask_flag):
         '''
         Returns
         loss: scalar.
@@ -109,14 +113,14 @@ class Transformer:
         summaries: training summary node
         '''
         # forward
-        age_logits, gender_logits, src_masks = self.encode(xs)
+        age_logits, gender_logits, src_masks = self.encode(dense_seqs, sparse_seqs, mask_flag)
 
         # train scheme
-        y_age_ = label_smoothing(tf.one_hot(y_age, depth=self.hp.age_classes))
-        y_gender_ = label_smoothing(tf.one_hot(y_gender, depth=self.hp.gender_classes))
+        age_ = label_smoothing(tf.one_hot(age, depth=self.hp.age_classes))
+        gender_ = label_smoothing(tf.one_hot(gender, depth=self.hp.gender_classes))
         
-        ce_age = tf.nn.softmax_cross_entropy_with_logits_v2(logits=age_logits, labels=y_age_)
-        ce_gender = tf.nn.softmax_cross_entropy_with_logits_v2(logits=gender_logits, labels=y_age_)
+        ce_age = tf.nn.softmax_cross_entropy_with_logits_v2(logits=age_logits, labels=age_)
+        ce_gender = tf.nn.softmax_cross_entropy_with_logits_v2(logits=gender_logits, labels=gender_)
         
         # loss = tf.reduce_sum(ce * nonpadding) / (tf.reduce_sum(nonpadding) + 1e-7)
         loss = ce_gender + ce_age
@@ -134,21 +138,22 @@ class Transformer:
 
         return loss, train_op, global_step, summaries
 
-    def eval(self, xs, y_age, y_gender):
+    def eval(self, x, y_age, y_gender):
         '''Predicts autoregressively
         At inference, input ys is ignored.
         Returns
         y_hat: (N, T2)
         '''
-        age_logits, gender_logits, src_masks = self.encode(xs, False)
+        age_logits, gender_logits, src_masks = self.encode(x, False)
 
         logging.info("Inference graph is being built. Please be patient.")
         pred_age = tf.argmax(age_logits, axis=1)
         pred_gender = tf.argmax(gender_logits, axis=1)
         # monitor a random sample
 
-        tf.summary.text("pred", pred)
+        tf.summary.text("pred_age", pred_age)
+        tf.summary.text("pred_gender", pred_gender)
         summaries = tf.summary.merge_all()
 
-        return y_hat, summaries
+        return pred_age, pred_gender, summaries
 

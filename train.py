@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-09 13:25:39
+@LastEditTime: 2020-05-09 17:01:09
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/train.py
@@ -34,19 +34,19 @@ hp = parser.parse_args()
 save_hparams(hp, hp.logdir)
 
 logging.info("# Prepare train/eval batches")
-train_batches, num_train_batches, num_train_samples = get_batch(hp.train, hp.maxlen, hp.vocab, hp.batch_size, shuffle=True)
-eval_batches, num_eval_batches, num_eval_samples = get_batch(hp.eval, 100000,hp.vocab, hp.batch_size, shuffle=False)
+train_batches, num_train_batches, num_train_samples = get_batch(hp.train_dense_path, hp.train_sparse_path, hp.train_age_gender_path, hp.maxlen, hp.batch_size, shuffle=True)
+eval_batches, num_eval_batches, num_eval_samples = get_batch(hp.eval_dense_path, hp.eval_sparse_path, hp.eval_age_gender_path, 100000 , hp.batch_size, shuffle=False)
 
 # create a iterator of the correct shape and type
 iter = tf.data.Iterator.from_structure(train_batches.output_types, train_batches.output_shapes)
-xs, ys = iter.get_next()
+dense_seqs, sparse_seqs, ages, genders, mask_flag = iter.get_next()
 
 train_init_op = iter.make_initializer(train_batches)
 eval_init_op = iter.make_initializer(eval_batches)
 
 logging.info("# Load model")
 m = Transformer(hp)
-loss, train_op, global_step, train_summaries = m.train(xs, ys)
+loss, train_op, global_step, train_summaries = m.train(dense_seqs, sparse_seqs, ages, genders, mask_flag)
 
 logging.info("# Session")
 saver = tf.train.Saver(max_to_keep=hp.num_epochs)
