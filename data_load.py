@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-09 14:02:59
-@LastEditTime: 2020-05-09 18:36:55
+@LastEditTime: 2020-05-09 18:37:14
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/data_load.py
@@ -10,7 +10,7 @@
 #/usr/bin/python3
 import tensorflow as tf
 import pickle
-import numpy
+import numpy as np
 from utils import calc_num_batches
 
 def load_data(dense_seqs_path, sparse_seqs_path, maxlen):
