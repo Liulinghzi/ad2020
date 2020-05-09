@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-09 14:02:59
-@LastEditTime: 2020-05-09 18:37:54
+@LastEditTime: 2020-05-09 18:49:49
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/data_load.py
@@ -44,7 +44,8 @@ def generator_fn(dense_seqs, sparse_seqs, age_gender):
 
 def input_fn(dense_seqs, sparse_seqs, age_gender, batch_size, shuffle=False):
     shapes = (
-        ([None, 2], [None, 6], (), (), ())
+        # ([None, 2], [None, 6], (), (), ())
+        ([None], [None], (), (), ())
         )
     types = (
         (tf.int32, tf.int32, tf.int32, tf.int32, tf.int32)
@@ -71,7 +72,6 @@ def input_fn(dense_seqs, sparse_seqs, age_gender, batch_size, shuffle=False):
 
 def get_batch(dense_seqs_path, sparse_seqs_path, age_gender_path, maxlen, batch_size, shuffle=False):
     dense_seqs, sparse_seqs = load_data(dense_seqs_path, sparse_seqs_path, maxlen)
-    print(np.array(dense_seqs).shape)
     age_gender = load_target(age_gender_path)
     # 这里的behavior_seqs需要时已经构建好的list [[1,1,1,1], [2,2,2,2]]
     batches = input_fn(dense_seqs, sparse_seqs, age_gender, batch_size, shuffle=shuffle)
