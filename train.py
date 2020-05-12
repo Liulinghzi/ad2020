@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-09 18:31:39
+@LastEditTime: 2020-05-12 09:28:16
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/train.py
@@ -36,27 +36,21 @@ save_hparams(hp, hp.logdir)
 
 
 logging.info("# Prepare train/eval batches")
-print('param')
-time.sleep(5)
 train_batches, num_train_batches, num_train_samples = get_batch(hp.train_dense_path, hp.train_sparse_path, hp.train_age_gender_path, hp.maxlen, hp.batch_size, shuffle=True)
 # eval_batches, num_eval_batches, num_eval_samples = get_batch(hp.eval_dense_path, hp.eval_sparse_path, hp.eval_age_gender_path, 100000 , hp.batch_size, shuffle=False)
-print('get batch')
-time.sleep(5000)
 
 # create a iterator of the correct shape and type
 iter = tf.data.Iterator.from_structure(train_batches.output_types, train_batches.output_shapes)
-dense_seqs, sparse_seqs, ages, genders, mask_flag = iter.get_next()
+creative_id, ad_id, product_id, product_category, advertiser_id, industry, time, click_times, age, gender = iter.get_next()
+print(creative_id)
+exit()
 
 train_init_op = iter.make_initializer(train_batches)
 # eval_init_op = iter.make_initializer(eval_batches)
 
 logging.info("# Load model")
 m = Transformer(hp)
-print('m = Transformer(hp)')
-time.sleep(5000)
 loss, train_op, global_step, train_summaries = m.train(dense_seqs, sparse_seqs, ages, genders, mask_flag)
-print('m.train')
-time.sleep(5000)
 
 logging.info("# Session")
 saver = tf.train.Saver(max_to_keep=hp.num_epochs)
@@ -77,8 +71,6 @@ with tf.Session() as sess:
     sess.run(train_init_op)
     total_steps = hp.num_epochs * num_train_batches
     _gs = sess.run(global_step)
-    print('sess.run')
-    time.sleep(5000)
 
     for i in tqdm(range(_gs, total_steps+1)):
         _, _gs, _summary = sess.run([train_op, global_step, train_summaries])

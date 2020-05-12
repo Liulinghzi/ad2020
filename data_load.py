@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-09 14:02:59
-@LastEditTime: 2020-05-09 18:50:21
+@LastEditTime: 2020-05-12 09:27:23
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/data_load.py
@@ -37,28 +37,42 @@ def generator_fn(dense_seqs, sparse_seqs, age_gender):
     for idx in range(len(dense_seqs)):
         d_seq = dense_seqs[idx]
         s_seq = sparse_seqs[idx]
+        
+        creative_id = np.array(s_seq)[:, 0].tolist()
+        ad_id = np.array(s_seq)[:, 1].tolist()
+        product_id = np.array(s_seq)[:, 2].tolist()
+        product_category = np.array(s_seq)[:, 3].tolist()
+        advertiser_id = np.array(s_seq)[:, 4].tolist()
+        industry = np.array(s_seq)[:, 5].tolist()
+        time = np.array(d_seq)[:, 0].tolist()
+        click_times = np.array(d_seq)[:, 1].tolist()
+
         age, gender = age_gender[idx]
-        mask_flag = 1
         #  一个beh_seq 是[[1,1,1,1], [2,2,2,2]]的行为id
-        yield (d_seq, s_seq, age, gender, mask_flag)
+        yield (creative_id, ad_id, product_id, product_category, advertiser_id, industry, time, click_times, age, gender)
 
 def input_fn(dense_seqs, sparse_seqs, age_gender, batch_size, shuffle=False):
     shapes = (
-        # ([None, 2], [None, 6], (), (), ())
-        ([None], [None], (), (), ())
+        (
+            [None], [None], [None], [None], [None], [None], [None], [None],
+            (), ()
         )
+    )
     types = (
-        (tf.int32, tf.int32, tf.int32, tf.int32, tf.int32)
+        (
+            tf.int32, tf.int32, tf.int32, tf.int32, tf.int32, tf.int32, tf.float32, tf.float32,
+            tf.int32, tf.int32)
         )
     paddings = (
-        (0, 0, 0, 0, 0)
+        (
+            0, 0, 0, 0, 0, 0, 0.0, 0.0,
+            0, 0)
         )
     dataset = tf.data.Dataset.from_generator(
         generator_fn,
         output_shapes=shapes,
         output_types=types,
         args=(dense_seqs, sparse_seqs, age_gender))  # <- arguments for generator_fn. converted to np string arrays
-    print(2)
 
     if shuffle: # for training
         dataset = dataset.shuffle(128*batch_size)
