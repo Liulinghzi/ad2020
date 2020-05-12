@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-12 15:18:05
+@LastEditTime: 2020-05-12 15:19:54
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/train.py
@@ -79,12 +79,12 @@ with tf.Session() as sess:
         if _gs and _gs % num_train_batches == 0:
             logging.info("epoch {} is done".format(epoch))
             _loss = sess.run(loss) # train loss
-            cpred_age, cpred_gender = sess.run([pred_age, pred_gender])
-            clables = sess.run([labels])
+            # cpred_age, cpred_gender = sess.run([pred_age, pred_gender])
+            # clables = sess.run([labels])
 
-            print(cpred_age[:5])
-            print(cpred_gender[:5])
-            print(clables[:5])
+            # print(cpred_age[:5])
+            # print(cpred_gender[:5])
+            # print(clables[:5])
             print(_loss)
 
             # logging.info("# test evaluation")
