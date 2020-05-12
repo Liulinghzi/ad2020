@@ -131,6 +131,7 @@ class Transformer:
         
         # forward
         age_logits, gender_logits, src_masks = self.encode(sparse_features, dense_features, labels)
+        age, gender = labels
 
         # train scheme
         age_ = label_smoothing(tf.one_hot(age, depth=self.hp.age_classes))
