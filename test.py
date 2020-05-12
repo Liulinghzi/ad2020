@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-09 14:02:59
-@LastEditTime: 2020-05-12 17:28:11
+@LastEditTime: 2020-05-12 20:25:41
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/test.py
@@ -23,7 +23,7 @@ import tensorflow as tf
 from data_load import get_batch
 from model import Transformer
 from hparams import Hparams
-from utils import get_hypotheses, calc_bleu, postprocess, load_hparams
+from utils import load_hparams
 import logging
 
 logging.basicConfig(level=logging.INFO)
