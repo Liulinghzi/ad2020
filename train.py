@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-12 09:28:16
+@LastEditTime: 2020-05-12 10:05:03
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/train.py
@@ -36,7 +36,7 @@ save_hparams(hp, hp.logdir)
 
 
 logging.info("# Prepare train/eval batches")
-train_batches, num_train_batches, num_train_samples = get_batch(hp.train_dense_path, hp.train_sparse_path, hp.train_age_gender_path, hp.maxlen, hp.batch_size, shuffle=True)
+train_batches, num_train_batches, num_train_samples = get_batch(hp.train_features_path, hp.train_labels_path, hp.maxlen, hp.batch_size, shuffle=True)
 # eval_batches, num_eval_batches, num_eval_samples = get_batch(hp.eval_dense_path, hp.eval_sparse_path, hp.eval_age_gender_path, 100000 , hp.batch_size, shuffle=False)
 
 # create a iterator of the correct shape and type

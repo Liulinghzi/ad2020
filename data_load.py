@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-09 14:02:59
-@LastEditTime: 2020-05-12 09:27:23
+@LastEditTime: 2020-05-12 10:21:34
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/data_load.py
@@ -13,66 +13,57 @@ import pickle
 import numpy as np
 from utils import calc_num_batches
 
-def load_data(dense_seqs_path, sparse_seqs_path, maxlen):
-    with open(dense_seqs_path, 'rb') as f:
-        dense_seqs = pickle.load(f)
-        for d_seq in dense_seqs:
-            if len(d_seq) + 1 > maxlen:
-                d_seq = d_seq[:maxlen]
-                
-    with open(sparse_seqs_path, 'rb') as f:
-        sparse_seqs = pickle.load(f)
-        for s_seq in sparse_seqs:
-            if len(s_seq) + 1 > maxlen:
-                s_seq = s_seq[:maxlen]
-    return dense_seqs, sparse_seqs
+def load_data(train_features_path, maxlen):
+    res = []
+    with open(train_features_path, 'rb') as f:
+        features = pickle.load(f)
+        for feat in features:
+            for seq in feat:
+                if len(seq) + 1 > maxlen:
+                    seq = seq[:maxlen]
+            res.append()
 
-def load_target(fpath):
-    with open(fpath, 'rb') as f:
-        age_gender = pickle.load(f)
+    return *res
 
-    return age_gender
+def load_target(train_labels_path):
+    with open(train_labels_path, 'rb') as f:
+        labels = pickle.load(f)
 
-def generator_fn(dense_seqs, sparse_seqs, age_gender):
-    for idx in range(len(dense_seqs)):
-        d_seq = dense_seqs[idx]
-        s_seq = sparse_seqs[idx]
-        
-        creative_id = np.array(s_seq)[:, 0].tolist()
-        ad_id = np.array(s_seq)[:, 1].tolist()
-        product_id = np.array(s_seq)[:, 2].tolist()
-        product_category = np.array(s_seq)[:, 3].tolist()
-        advertiser_id = np.array(s_seq)[:, 4].tolist()
-        industry = np.array(s_seq)[:, 5].tolist()
-        time = np.array(d_seq)[:, 0].tolist()
-        click_times = np.array(d_seq)[:, 1].tolist()
+    return labels
 
-        age, gender = age_gender[idx]
-        #  一个beh_seq 是[[1,1,1,1], [2,2,2,2]]的行为id
-        yield (creative_id, ad_id, product_id, product_category, advertiser_id, industry, time, click_times, age, gender)
+def generator_fn(creative_id, ad_id, product_id, product_category, advertiser_id, industry, time, click_times, age, gender):
+    for idx in range(len(creative_id)):
+        yield (
+            creative_id[idx], ad_id[idx], product_id[idx], product_category[idx], advertiser_id[idx], industry[idx], 
+            time[idx], click_times[idx], 
+            age, gender
+            )
 
-def input_fn(dense_seqs, sparse_seqs, age_gender, batch_size, shuffle=False):
+def input_fn(features, labels, batch_size, shuffle=False):
     shapes = (
         (
-            [None], [None], [None], [None], [None], [None], [None], [None],
+            [None], [None], [None], [None], [None], [None], 
+            [None], [None],
             (), ()
         )
     )
     types = (
         (
-            tf.int32, tf.int32, tf.int32, tf.int32, tf.int32, tf.int32, tf.float32, tf.float32,
+            tf.int32, tf.int32, tf.int32, tf.int32, tf.int32, tf.int32, 
+            tf.float32, tf.float32,
             tf.int32, tf.int32)
         )
     paddings = (
         (
-            0, 0, 0, 0, 0, 0, 0.0, 0.0,
+            0, 0, 0, 0, 0, 0, 
+            0.0, 0.0,
             0, 0)
         )
     dataset = tf.data.Dataset.from_generator(
         generator_fn,
         output_shapes=shapes,
         output_types=types,
-        args=(dense_seqs, sparse_seqs, age_gender))  # <- arguments for generator_fn. converted to np string arrays
+        args=(*features, *labels))  # <- arguments for generator_fn. converted to np string arrays
 
     if shuffle: # for training
         dataset = dataset.shuffle(128*batch_size)
@@ -82,10 +73,10 @@ def input_fn(dense_seqs, sparse_seqs, age_gender, batch_size, shuffle=False):
 
     return dataset
 
-def get_batch(dense_seqs_path, sparse_seqs_path, age_gender_path, maxlen, batch_size, shuffle=False):
-    dense_seqs, sparse_seqs = load_data(dense_seqs_path, sparse_seqs_path, maxlen)
-    age_gender = load_target(age_gender_path)
+def get_batch(train_features_path, train_labels_path, maxlen, batch_size, shuffle=False):
+    features = load_data(train_features_path, maxlen)
+    labels = load_target(train_labels_path)
     # 这里的behavior_seqs需要时已经构建好的list [[1,1,1,1], [2,2,2,2]]
-    batches = input_fn(dense_seqs, sparse_seqs, age_gender, batch_size, shuffle=shuffle)
+    batches = input_fn(features, labels, batch_size, shuffle=shuffle)
     num_batches = calc_num_batches(len(dense_seqs), batch_size)
     return batches, num_batches, len(dense_seqs)

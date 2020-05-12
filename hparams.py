@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-09 18:08:52
+@LastEditTime: 2020-05-12 10:04:19
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/hparams.py
@@ -18,11 +18,9 @@ class Hparams:
 
     # train
     ## files
-    parser.add_argument('--train_dense_path', default='iwslt2016/segmented/train.de.bpe',
+    parser.add_argument('--train_features_path', default='iwslt2016/segmented/train.de.bpe',
                              help="german training segmented data")
-    parser.add_argument('--train_sparse_path', default='iwslt2016/segmented/train.de.bpe',
-                             help="german training segmented data")
-    parser.add_argument('--train_age_gender_path', default='iwslt2016/segmented/train.de.bpe',
+    parser.add_argument('--train_labels_path', default='iwslt2016/segmented/train.de.bpe',
                              help="german training segmented data")
     parser.add_argument('--eval', default='iwslt2016/segmented/eval.de.bpe',
                              help="german evaluation segmented data")
