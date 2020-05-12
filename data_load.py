@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-09 14:02:59
-@LastEditTime: 2020-05-12 12:53:11
+@LastEditTime: 2020-05-12 13:47:12
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/data_load.py
@@ -31,12 +31,12 @@ def encode(seq_str):
     return seq
 
 
-def generator_fn(creative_id, ad_id, product_id, product_category, advertiser_id, industry, time, click_times, age, gender):
-    for idx in range(len(creative_id)):
+def generator_fn(product_id, product_category, advertiser_id, industry, time, click_times, age, gender):
+    for idx in range(len(product_id)):
         yield (
             (
-                encode(creative_id[idx]),
-                encode(ad_id[idx]),
+                # encode(creative_id[idx]),
+                # encode(ad_id[idx]),
                 encode(product_id[idx]),
                 encode(product_category[idx]),
                 encode(advertiser_id[idx]),
@@ -54,17 +54,17 @@ def generator_fn(creative_id, ad_id, product_id, product_category, advertiser_id
 
 def input_fn(features, labels, batch_size, shuffle=False):
     shapes = (
-        ([None], [None], [None], [None], [None], [None]), 
+        ([None], [None], [None], [None]), 
         ([None], [None]),
         ([1], [1])
     )
     types = (
-        (tf.int32, tf.int32, tf.int32, tf.int32, tf.int32, tf.int32), 
+        (tf.int32, tf.int32, tf.int32, tf.int32), 
         (tf.float32, tf.float32),
         (tf.int32, tf.int32)
     )
     paddings = (
-        (0, 0, 0, 0, 0, 0), 
+        (0, 0, 0, 0), 
         (0.0, 0.0),
         (0, 0)
     )
@@ -86,10 +86,6 @@ def input_fn(features, labels, batch_size, shuffle=False):
 def get_batch(train_features_path, train_labels_path, maxlen, batch_size, shuffle=False):
     features = load_data(train_features_path, maxlen)
     labels = load_target(train_labels_path)
-    creative_id = features[0]
-    # for idx in range(len(creative_id)):
-    #     print(encode(creative_id[idx]))
-    # 这里的behavior_seqs需要时已经构建好的list [[1,1,1,1], [2,2,2,2]]
     batches = input_fn(features, labels, batch_size, shuffle=shuffle)
     num_batches = calc_num_batches(len(labels[0]), batch_size)
     return batches, num_batches, len(labels[0])

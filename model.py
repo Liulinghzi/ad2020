@@ -23,12 +23,12 @@ class Transformer:
         with open(self.hp.vocab_list, 'rb') as f:
             self.hp.vocab_list = pickle.load(f)
         # 前两个特征是dense，1维
-        self.embedding_creative_id = get_token_embeddings(self.hp.vocab_list[0], self.hp.d_model, 'creative_id', zero_pad=True)
-        self.embedding_ad_id = get_token_embeddings(self.hp.vocab_list[1], self.hp.d_model, 'ad_id', zero_pad=True)
-        self.embedding_product_id = get_token_embeddings(self.hp.vocab_list[2], self.hp.d_model, 'product_id', zero_pad=True)
-        self.embedding_product_category = get_token_embeddings(self.hp.vocab_list[3], self.hp.d_model, 'product_category', zero_pad=True)
-        self.embedding_advertiser_id = get_token_embeddings(self.hp.vocab_list[4], self.hp.d_model, 'advertiser_id', zero_pad=True)
-        self.embedding_industry = get_token_embeddings(self.hp.vocab_list[5], self.hp.d_model, 'industry', zero_pad=True)
+        # self.embedding_creative_id = get_token_embeddings(self.hp.vocab_list[0], self.hp.d_model, 'creative_id', zero_pad=True)
+        # self.embedding_ad_id = get_token_embeddings(self.hp.vocab_list[1], self.hp.d_model, 'ad_id', zero_pad=True)
+        self.embedding_product_id = get_token_embeddings(self.hp.vocab_list[0], self.hp.d_model, 'product_id', zero_pad=True)
+        self.embedding_product_category = get_token_embeddings(self.hp.vocab_list[1], self.hp.d_model, 'product_category', zero_pad=True)
+        self.embedding_advertiser_id = get_token_embeddings(self.hp.vocab_list[2], self.hp.d_model, 'advertiser_id', zero_pad=True)
+        self.embedding_industry = get_token_embeddings(self.hp.vocab_list[3], self.hp.d_model, 'industry', zero_pad=True)
         '''
         这里就不只是一个embeddings了而是
         self.embedding_dict = {feat: get_token_embeddings for feat in features}
@@ -40,13 +40,13 @@ class Transformer:
         memory: encoder outputs. (N, T1, d_model)
         '''
         with tf.variable_scope("encoder", reuse=tf.AUTO_REUSE):
-            creative_id, ad_id, product_id, product_category, advertiser_id, industry = sparse_features
+            product_id, product_category, advertiser_id, industry = sparse_features
             time, click_times = dense_features
             age, gender = labels
 
             # src_masks
             # 在get_batch的时候用了0来作为pad
-            src_masks = tf.math.equal(creative_id, 0) # (N, T1)
+            src_masks = tf.math.equal(product_id, 0) # (N, T1)
 
             # embedding
             # x的形状为[
@@ -58,8 +58,8 @@ class Transformer:
             # [bs, maxlen, feat_num]
             # 需要在feat_num的维度进行切分，分别lookup，再FM和concate，FM以后在加
 
-            creative_id_enc = tf.nn.embedding_lookup(self.embedding_creative_id, creative_id)
-            ad_id_enc = tf.nn.embedding_lookup(self.embedding_ad_id, ad_id)
+            # creative_id_enc = tf.nn.embedding_lookup(self.embedding_creative_id, creative_id)
+            # ad_id_enc = tf.nn.embedding_lookup(self.embedding_ad_id, ad_id)
             product_id_enc = tf.nn.embedding_lookup(self.embedding_product_id, product_id)
             product_category_enc = tf.nn.embedding_lookup(self.embedding_product_category, product_category)
             advertiser_id_enc = tf.nn.embedding_lookup(self.embedding_advertiser_id, advertiser_id)
@@ -68,7 +68,7 @@ class Transformer:
 
             # enbedding的维度是[bs, seqlen, embedding]
             # dense_features的维度是[bs, seqlen]
-            encs = [creative_id_enc, ad_id_enc, product_id_enc, product_category_enc, advertiser_id_enc, industry_enc]
+            encs = [product_id_enc, product_category_enc, advertiser_id_enc, industry_enc]
             for enc in encs:
                 enc *= self.hp.d_model**0.5 # scale
                 enc += positional_encoding(enc, self.hp.maxlen)
@@ -115,10 +115,8 @@ class Transformer:
                     # feed forward
                     gender_enc = ff(gender_enc, num_units=[self.hp.d_ff, gender_enc.shape[-1]])
 
-        print(age_enc.shape)        
         age_enc = tf.reduce_sum(age_enc, axis=1)
         gender_enc = tf.reduce_sum(gender_enc, axis=1)
-        print(age_enc.shape)        
         age_logits = tf.layers.dense(age_enc, self.hp.age_classes)        
         gender_logits = tf.layers.dense(gender_enc, self.hp.gender_classes)        
         

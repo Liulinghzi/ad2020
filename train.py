@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-12 13:22:01
+@LastEditTime: 2020-05-12 13:50:15
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/train.py
@@ -88,7 +88,7 @@ with tf.Session() as sess:
             # hypotheses = get_hypotheses(num_eval_batches, num_eval_samples, sess, y_hat, m.idx2token)
 
             # logging.info("# write results")
-            model_output = "sample%02d%.2f" % (epoch, _loss)
+            model_output = "ckpt_%02d" % (epoch)
             # if not os.path.exists(hp.evaldir): os.makedirs(hp.evaldir)
             # translation = os.path.join(hp.evaldir, model_output)
             # with open(translation, 'w') as fout:
