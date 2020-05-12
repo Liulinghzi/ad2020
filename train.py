@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-12 12:00:11
+@LastEditTime: 2020-05-12 12:13:54
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/train.py
@@ -42,6 +42,8 @@ train_batches, num_train_batches, num_train_samples = get_batch(hp.train_feature
 # create a iterator of the correct shape and type
 iter = tf.data.Iterator.from_structure(train_batches.output_types, train_batches.output_shapes)
 sparse_features, dense_features, labels = iter.get_next()
+print(sparse_features)
+print(dense_features)
 
 train_init_op = iter.make_initializer(train_batches)
 # eval_init_op = iter.make_initializer(eval_batches)
