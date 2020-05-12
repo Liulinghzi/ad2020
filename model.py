@@ -159,9 +159,9 @@ class Transformer:
 
         age_gender_logits, src_masks = self.encode(sparse_features, dense_features)
 
-        pred_age_gender = tf.argmax(age_gender_logits, axis=1) + 1
+        pred_age_gender = tf.argmax(age_gender_logits, axis=1)
         pred_age = tf.mod(pred_age_gender, 10) + 1
         pred_gender = tf.ceil(tf.divide(pred_age_gender, 10))
 
-        return pred_age, pred_gender,pred_age_gender
+        return pred_age, pred_gender,pred_age_gender+1
 

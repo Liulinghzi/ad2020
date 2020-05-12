@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-09 14:02:59
-@LastEditTime: 2020-05-12 14:44:35
+@LastEditTime: 2020-05-12 15:51:09
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/data_load.py
@@ -35,8 +35,6 @@ def generator_fn(product_id, product_category, advertiser_id, industry, time, cl
     for idx in range(len(product_id)):
         yield (
             (
-                # encode(creative_id[idx]),
-                # encode(ad_id[idx]),
                 encode(product_id[idx]),
                 encode(product_category[idx]),
                 encode(advertiser_id[idx]),
