@@ -57,6 +57,11 @@ class Transformer:
             # enbedding的维度是[bs, seqlen, embedding]
             # dense_features的维度是[bs, seqlen]
             encs = [product_id_enc, product_category_enc, advertiser_id_enc, industry_enc]
+            print('product_id_enc', product_id_enc.shape)
+            print('product_category_enc', product_category_enc.shape)
+            print('advertiser_id_enc', advertiser_id_enc.shape)
+            print('industry_enc', industry_enc.shape)
+
             for enc in encs:
                 enc *= self.hp.d_model**0.5 # scale
                 enc += positional_encoding(enc, self.hp.maxlen)
@@ -64,6 +69,10 @@ class Transformer:
 
             time = tf.expand_dims(time, -1)
             click_times = tf.expand_dims(click_times, -1)
+            print('time', time.shape)
+            print('click_times', click_times.shape)
+
+
             encs += [time, click_times]
 
             concated_enc = tf.concat(axis=2, values=encs)
