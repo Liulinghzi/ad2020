@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-09 14:02:59
-@LastEditTime: 2020-05-12 10:23:31
+@LastEditTime: 2020-05-12 11:25:55
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/data_load.py
@@ -14,16 +14,10 @@ import numpy as np
 from utils import calc_num_batches
 
 def load_data(train_features_path, maxlen):
-    res = []
     with open(train_features_path, 'rb') as f:
         features = pickle.load(f)
-        for feat in features:
-            for seq in feat:
-                if len(seq) + 1 > maxlen:
-                    seq = seq[:maxlen]
-            res.append(feat)
 
-    return res
+    return features
 
 def load_target(train_labels_path):
     with open(train_labels_path, 'rb') as f:
@@ -32,11 +26,22 @@ def load_target(train_labels_path):
     return labels
 
 def generator_fn(creative_id, ad_id, product_id, product_category, advertiser_id, industry, time, click_times, age, gender):
+    def encode(seq_str):
+        seq = [float(i) for i in seq_str.split(',')]
+        return seq
+
     for idx in range(len(creative_id)):
         yield (
-            creative_id[idx], ad_id[idx], product_id[idx], product_category[idx], advertiser_id[idx], industry[idx], 
-            time[idx], click_times[idx], 
-            age, gender
+            encode(creative_id[idx]),
+            encode(ad_id[idx]),
+            encode(product_id[idx]),
+            encode(product_category[idx]),
+            encode(advertiser_id[idx]),
+            encode(industry[idx]),
+            encode(time[idx]),
+            encode(click_times[idx]),
+            encode(age[idx]),
+            encode(gender[idx])
             )
 
 def input_fn(features, labels, batch_size, shuffle=False):
@@ -44,7 +49,7 @@ def input_fn(features, labels, batch_size, shuffle=False):
         (
             [None], [None], [None], [None], [None], [None], 
             [None], [None],
-            (), ()
+            [], []
         )
     )
     types = (
