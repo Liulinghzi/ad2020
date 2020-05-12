@@ -91,7 +91,7 @@ class Transformer:
 
 
         age_gender_enc = tf.reduce_sum(age_gender_enc, axis=1)
-        age_gender_logits = tf.layers.dense(age_gender_enc, self.hp.age_classes)        
+        age_gender_logits = tf.layers.dense(age_gender_enc, self.hp.age_classes*self.hp.gender_classes)        
         
         return age_gender_logits, src_masks
 
