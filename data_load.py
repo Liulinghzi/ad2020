@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-09 14:02:59
-@LastEditTime: 2020-05-12 12:49:45
+@LastEditTime: 2020-05-12 12:51:45
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/data_load.py
@@ -28,12 +28,10 @@ def load_target(train_labels_path):
 
 def encode(seq_str):
     seq = [float(i) for i in seq_str.split()]
-    print(seq)
     return seq
 
 
 def generator_fn(creative_id, ad_id, product_id, product_category, advertiser_id, industry, time, click_times, age, gender):
-
     for idx in range(len(creative_id)):
         yield (
             (
@@ -47,7 +45,7 @@ def generator_fn(creative_id, ad_id, product_id, product_category, advertiser_id
             (
                 encode(time[idx]),
                 encode(click_times[idx])
-                )
+                ),
             (
                 encode(age[idx]),
                 encode(gender[idx])
