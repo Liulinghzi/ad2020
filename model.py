@@ -74,6 +74,8 @@ class Transformer:
                 enc += positional_encoding(enc, self.hp.maxlen)
                 enc = tf.layers.dropout(enc, self.hp.dropout_rate, training=training)
 
+            time = tf.expand_dims(time, -1)
+            click_times = tf.expand_dims(click_times, -1)
             encs += [time, click_times]
 
             concated_enc = tf.concat(concat_dim=1, values=encs)
