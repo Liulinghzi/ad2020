@@ -143,7 +143,7 @@ class Transformer:
         ce_gender = tf.nn.softmax_cross_entropy_with_logits_v2(logits=gender_logits, labels=gender_)
         
         # loss = tf.reduce_sum(ce * nonpadding) / (tf.reduce_sum(nonpadding) + 1e-7)
-        loss = ce_gender + ce_age
+        loss = tf.reduce_sum(ce_gender + ce_age)
 
         global_step = tf.train.get_or_create_global_step()
         lr = noam_scheme(self.hp.lr, global_step, self.hp.warmup_steps)
