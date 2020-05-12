@@ -115,6 +115,10 @@ class Transformer:
                     # feed forward
                     gender_enc = ff(gender_enc, num_units=[self.hp.d_ff, gender_enc.shape[-1]])
 
+        print(age_enc.shape)        
+        age_enc = tf.reduce_sum(age_enc, axis=1)
+        gender_enc = tf.reduce_sum(gender_enc, axis=1)
+        print(age_enc.shape)        
         age_logits = tf.layers.dense(age_enc, self.hp.age_classes)        
         gender_logits = tf.layers.dense(gender_enc, self.hp.gender_classes)        
         
