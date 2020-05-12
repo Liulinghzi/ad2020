@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-12 20:02:56
-@LastEditTime: 2020-05-12 20:15:59
+@LastEditTime: 2020-05-12 21:13:47
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/test.py
@@ -39,6 +39,7 @@ test_batches, num_test_batches, num_test_samples  = get_batch(hp.test_features_p
                                               shuffle=False)
 iter = tf.data.Iterator.from_structure(test_batches.output_types, test_batches.output_shapes)
 sparse_features, dense_features, labels = iter.get_next()
+m = Transformer(hp)
 pred_age, pred_gender = m.infer(sparse_features, dense_features, labels)
 test_init_op = iter.make_initializer(test_batches)
 
