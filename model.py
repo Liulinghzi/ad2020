@@ -100,7 +100,7 @@ class Transformer:
                                               training=training,
                                               causality=False)
                     # feed forward
-                    age_enc = ff(age_enc, num_units=[self.hp.d_ff, self.hp.d_model])
+                    age_enc = ff(age_enc, num_units=[self.hp.d_ff, age_enc.shape[-1]])
 
                 with tf.variable_scope("num_blocks_gender_{}".format(i), reuse=tf.AUTO_REUSE):
                     # self-attention
@@ -113,7 +113,7 @@ class Transformer:
                                               training=training,
                                               causality=False)
                     # feed forward
-                    gender_enc = ff(gender_enc, num_units=[self.hp.d_ff, self.hp.d_model])
+                    gender_enc = ff(gender_enc, num_units=[self.hp.d_ff, gender_enc.shape[-1]])
 
         age_logits = tf.layers.dense(age_enc, self.hp.age_classes)        
         gender_logits = tf.layers.dense(gender_enc, self.hp.gender_classes)        
