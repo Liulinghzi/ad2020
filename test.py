@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-09 14:02:59
-@LastEditTime: 2020-05-12 21:11:08
+@LastEditTime: 2020-05-12 21:15:33
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/test.py
@@ -66,8 +66,8 @@ with tf.Session() as sess:
     
     for i in tqdm(range(num_test_batches)):
         cpred_age, cpred_gender = sess.run([pred_age, pred_gender])
-        predicted_age.extend(cpred_age.values)
-        predicted_gender.extend(cpred_gender.values)
+        predicted_age.extend(cpred_age.tolist())
+        predicted_gender.extend(cpred_gender.tolist())
     print(len(predicted_age))
 
 
