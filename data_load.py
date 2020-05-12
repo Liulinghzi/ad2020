@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-09 14:02:59
-@LastEditTime: 2020-05-12 10:22:57
+@LastEditTime: 2020-05-12 10:23:31
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/data_load.py
@@ -21,7 +21,7 @@ def load_data(train_features_path, maxlen):
             for seq in feat:
                 if len(seq) + 1 > maxlen:
                     seq = seq[:maxlen]
-            res.append()
+            res.append(feat)
 
     return res
 
