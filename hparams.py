@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-12 10:04:19
+@LastEditTime: 2020-05-12 20:18:01
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/hparams.py
@@ -56,8 +56,10 @@ class Hparams:
 
 
     # test
-    parser.add_argument('--test', default='iwslt2016/segmented/test.de.bpe',
-                        help="german test segmented data")
+    parser.add_argument('--test_features_path', default='iwslt2016/segmented/train.de.bpe',
+                             help="german training segmented data")
+    parser.add_argument('--test_labels_path', default='iwslt2016/segmented/train.de.bpe',
+                             help="german training segmented data")
     parser.add_argument('--ckpt', help="checkpoint file path")
     parser.add_argument('--test_batch_size', default=128, type=int)
     parser.add_argument('--testdir', default="test/1", help="test result dir")
