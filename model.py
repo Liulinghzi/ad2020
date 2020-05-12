@@ -42,7 +42,7 @@ class Transformer:
         with tf.variable_scope("encoder", reuse=tf.AUTO_REUSE):
             product_id, product_category, advertiser_id, industry = sparse_features
             time, click_times = dense_features
-            age, gender = labels
+            age_gender = labels
 
             # src_masks
             # 在get_batch的时候用了0来作为pad
@@ -72,43 +72,28 @@ class Transformer:
 
             # 这里的enc需要从embedding_dict中的多个matrix中lookup，然后concat，作为一个enc
 
-            age_enc = concated_enc
-            gender_enc = concated_enc
+            age_gender_enc = concated_enc
             
             ## Blocks
             for i in range(self.hp.num_blocks):
-                with tf.variable_scope("num_blocks_age_{}".format(i), reuse=tf.AUTO_REUSE):
+                with tf.variable_scope("num_blocks_age_gender_{}".format(i), reuse=tf.AUTO_REUSE):
                     # self-attention
-                    age_enc = multihead_attention(queries=age_enc,
-                                              keys=age_enc,
-                                              values=age_enc,
+                    age_gender_enc = multihead_attention(queries=age_gender_enc,
+                                              keys=age_gender_enc,
+                                              values=age_gender_enc,
                                               key_masks=src_masks,
                                               num_heads=self.hp.num_heads,
                                               dropout_rate=self.hp.dropout_rate,
                                               training=training,
                                               causality=False)
                     # feed forward
-                    age_enc = ff(age_enc, num_units=[self.hp.d_ff, age_enc.shape[-1]])
+                    age_gender_enc = ff(age_gender_enc, num_units=[self.hp.d_ff, age_gender_enc.shape[-1]])
 
-                with tf.variable_scope("num_blocks_gender_{}".format(i), reuse=tf.AUTO_REUSE):
-                    # self-attention
-                    gender_enc = multihead_attention(queries=gender_enc,
-                                              keys=gender_enc,
-                                              values=gender_enc,
-                                              key_masks=src_masks,
-                                              num_heads=self.hp.num_heads,
-                                              dropout_rate=self.hp.dropout_rate,
-                                              training=training,
-                                              causality=False)
-                    # feed forward
-                    gender_enc = ff(gender_enc, num_units=[self.hp.d_ff, gender_enc.shape[-1]])
 
-        age_enc = tf.reduce_sum(age_enc, axis=1)
-        gender_enc = tf.reduce_sum(gender_enc, axis=1)
-        age_logits = tf.layers.dense(age_enc, self.hp.age_classes)        
-        gender_logits = tf.layers.dense(gender_enc, self.hp.gender_classes)        
+        age_gender_enc = tf.reduce_sum(age_gender_enc, axis=1)
+        age_gender_logits = tf.layers.dense(age_gender_enc, self.hp.age_classes)        
         
-        return age_logits, gender_logits, src_masks
+        return age_gender_logits, src_masks
 
     def train(self, sparse_features, dense_features, labels):
         '''
@@ -120,18 +105,16 @@ class Transformer:
         '''
         
         # forward
-        age_logits, gender_logits, src_masks = self.encode(sparse_features, dense_features, labels)
-        age, gender = labels
+        age_gender_logits, src_masks = self.encode(sparse_features, dense_features, labels)
+        age_gender = labels
 
         # train scheme
-        age_ = label_smoothing(tf.one_hot(age, depth=self.hp.age_classes))
-        gender_ = label_smoothing(tf.one_hot(gender, depth=self.hp.gender_classes))
+        age_gender_ = label_smoothing(tf.one_hot(age_gender, depth=self.hp.age_classes*self.hp.gender_classes))
         
-        ce_age = tf.nn.softmax_cross_entropy_with_logits_v2(logits=age_logits, labels=age_)
-        ce_gender = tf.nn.softmax_cross_entropy_with_logits_v2(logits=gender_logits, labels=gender_)
+        ce_age_gender = tf.nn.softmax_cross_entropy_with_logits_v2(logits=age_gender_logits, labels=age_gender_)
         
         # loss = tf.reduce_sum(ce * nonpadding) / (tf.reduce_sum(nonpadding) + 1e-7)
-        loss = tf.reduce_sum(ce_gender + ce_age)
+        loss = tf.reduce_sum(ce_age_gender)
 
         global_step = tf.train.get_or_create_global_step()
         lr = noam_scheme(self.hp.lr, global_step, self.hp.warmup_steps)
@@ -153,11 +136,12 @@ class Transformer:
         y_hat: (N, T2)
         '''
 
-        age_logits, gender_logits, src_masks = self.encode(sparse_features, dense_features, labels)
+        age_gender_logits, src_masks = self.encode(sparse_features, dense_features, labels)
 
         logging.info("Inference graph is being built. Please be patient.")
-        pred_age = tf.argmax(age_logits, axis=1)
-        pred_gender = tf.argmax(gender_logits, axis=1)
+        pred_age_gender = tf.argmax(age_gender_logits, axis=1)
+        pred_age = tf.mod(pred_age_gender, 10)
+        pred_gender = tf.ceil(tf.divide(pred_age_gender, 10))
         # monitor a random sample
 
         tf.summary.text("pred_age", pred_age)

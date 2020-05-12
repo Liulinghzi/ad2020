@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-09 14:02:59
-@LastEditTime: 2020-05-12 13:47:12
+@LastEditTime: 2020-05-12 14:44:35
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/data_load.py
@@ -47,26 +47,29 @@ def generator_fn(product_id, product_category, advertiser_id, industry, time, cl
                 encode(click_times[idx])
                 ),
             (
-                encode(age[idx]),
-                encode(gender[idx])
+                encode(age[idx])[0] + (encode(gender[idx])[0] - 1) * 10
                 )
+                # age取值1-10， gender取值1-2
+                # age_gender取值1-20
+                # 1-10 gender为1  11-20gender为2
+                # mod10为age
             )
 
 def input_fn(features, labels, batch_size, shuffle=False):
     shapes = (
         ([None], [None], [None], [None]), 
         ([None], [None]),
-        ([1], [1])
+        ()
     )
     types = (
         (tf.int32, tf.int32, tf.int32, tf.int32), 
         (tf.float32, tf.float32),
-        (tf.int32, tf.int32)
+        (tf.int32)
     )
     paddings = (
         (0, 0, 0, 0), 
         (0.0, 0.0),
-        (0, 0)
+        (0)
     )
 
     dataset = tf.data.Dataset.from_generator(
