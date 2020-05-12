@@ -127,7 +127,7 @@ class Transformer:
 
         summaries = tf.summary.merge_all()
 
-        return loss, train_op, global_step, summaries
+        return loss, train_op, global_step, summaries,age_gender_logits,age_gender_
 
     def eval(self, sparse_features, dense_features, labels):
         '''Predicts autoregressively
