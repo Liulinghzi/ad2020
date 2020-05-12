@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-09 14:02:59
-@LastEditTime: 2020-05-12 11:25:55
+@LastEditTime: 2020-05-12 11:51:14
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/data_load.py
@@ -83,5 +83,5 @@ def get_batch(train_features_path, train_labels_path, maxlen, batch_size, shuffl
     labels = load_target(train_labels_path)
     # 这里的behavior_seqs需要时已经构建好的list [[1,1,1,1], [2,2,2,2]]
     batches = input_fn(features, labels, batch_size, shuffle=shuffle)
-    num_batches = calc_num_batches(len(dense_seqs), batch_size)
-    return batches, num_batches, len(dense_seqs)
+    num_batches = calc_num_batches(len(labels[0]), batch_size)
+    return batches, num_batches, len(labels[0])
