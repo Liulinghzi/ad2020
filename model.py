@@ -78,7 +78,7 @@ class Transformer:
             click_times = tf.expand_dims(click_times, -1)
             encs += [time, click_times]
 
-            concated_enc = tf.concat(concat_dim=1, values=encs)
+            concated_enc = tf.concat(axis=1, values=encs)
             # concate之后应该是[con_emb, con_emb]
             
 
