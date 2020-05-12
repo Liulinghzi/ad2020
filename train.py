@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-12 15:23:02
+@LastEditTime: 2020-05-12 15:30:07
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/train.py
@@ -72,20 +72,17 @@ with tf.Session() as sess:
     _gs = sess.run(global_step)
 
     for i in tqdm(range(_gs, total_steps+1)):
-        _, _gs, _summary = sess.run([train_op, global_step, train_summaries])
+        _, _gs, _summary,cpred_age, cpred_gender, clabels = sess.run([train_op, global_step, train_summaries,pred_age, pred_gender, labels])
         epoch = math.ceil(_gs / num_train_batches)
         summary_writer.add_summary(_summary, _gs)
+
+        print(cpred_age[:5])
+        print(cpred_gender[:5])
+        print(clables[:5])
 
         if _gs and _gs % num_train_batches == 0:
             logging.info("epoch {} is done".format(epoch))
             _loss = sess.run(loss) # train loss
-            # cpred_age, cpred_gender = sess.run([pred_age, pred_gender])
-            # clables = sess.run([labels])
-            print(sess.run([age_gender_logits,age_gender_]))
-
-            # print(cpred_age[:5])
-            # print(cpred_gender[:5])
-            # print(clables[:5])
             print(_loss)
 
             # logging.info("# test evaluation")
