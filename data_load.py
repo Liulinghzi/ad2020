@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-09 14:02:59
-@LastEditTime: 2020-05-12 12:43:08
+@LastEditTime: 2020-05-12 12:45:00
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/data_load.py
@@ -27,8 +27,8 @@ def load_target(train_labels_path):
 
 
 def encode(seq_str):
-    print(seq_str.split(','))
-    seq = [float(i) for i in seq_str.split(',')]
+    print(seq_str.split())
+    seq = [float(i) for i in seq_str.split()]
     return seq
 
 
