@@ -137,6 +137,15 @@ class Transformer:
         '''
 
         age_gender_logits, src_masks = self.encode(sparse_features, dense_features, labels)
+        age_gender = labels
+
+        age_gender_ = label_smoothing(tf.one_hot(age_gender, depth=self.hp.age_classes*self.hp.gender_classes))
+        
+        ce_age_gender = tf.nn.softmax_cross_entropy_with_logits_v2(logits=age_gender_logits, labels=age_gender_)
+        
+        # loss = tf.reduce_sum(ce * nonpadding) / (tf.reduce_sum(nonpadding) + 1e-7)
+        loss = tf.reduce_mean(ce_age_gender)
+
 
         logging.info("Inference graph is being built. Please be patient.")
         pred_age_gender = tf.argmax(age_gender_logits, axis=1)
@@ -144,6 +153,7 @@ class Transformer:
         pred_gender = tf.ceil(tf.divide(pred_age_gender, 10))
         # monitor a random sample
 
+        tf.summary.scalar("eval_loss", loss)
         tf.summary.text("pred_age", pred_age)
         tf.summary.text("pred_gender", pred_gender)
         summaries = tf.summary.merge_all()
@@ -161,7 +171,7 @@ class Transformer:
 
         pred_age_gender = tf.argmax(age_gender_logits, axis=1)
         pred_age = tf.mod(pred_age_gender, 10) + 1
-        pred_gender = tf.ceil(tf.divide(pred_age_gender, 10))
+        pred_gender = tf.ceil(tf.divide(pred_age_gender + 1, 10))
 
-        return pred_age, pred_gender,pred_age_gender+1
+        return pred_age, pred_gender
 
