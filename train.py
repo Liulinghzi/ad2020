@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-12 13:50:15
+@LastEditTime: 2020-05-12 14:02:20
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/train.py
@@ -78,7 +78,6 @@ with tf.Session() as sess:
         if _gs and _gs % num_train_batches == 0:
             logging.info("epoch {} is done".format(epoch))
             _loss = sess.run(loss) # train loss
-            print(_loss.shape)
 
             # logging.info("# test evaluation")
             # _, _eval_summaries = sess.run([eval_init_op, eval_summaries])
