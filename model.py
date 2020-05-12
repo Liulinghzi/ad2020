@@ -109,8 +109,7 @@ class Transformer:
         age_gender = labels
 
         # train scheme
-        # age_gender_ = label_smoothing(tf.one_hot(age_gender, depth=self.hp.age_classes*self.hp.gender_classes))
-        age_gender_ = tf.one_hot(age_gender, depth=self.hp.age_classes*self.hp.gender_classes)
+        age_gender_ = label_smoothing(tf.one_hot(age_gender, depth=self.hp.age_classes*self.hp.gender_classes))
         
         ce_age_gender = tf.nn.softmax_cross_entropy_with_logits_v2(logits=age_gender_logits, labels=age_gender_)
         
@@ -128,7 +127,7 @@ class Transformer:
 
         summaries = tf.summary.merge_all()
 
-        return loss, train_op, global_step, summaries,age_gender_logits,age_gender_
+        return loss, train_op, global_step, summaries
 
     def eval(self, sparse_features, dense_features, labels):
         '''Predicts autoregressively
