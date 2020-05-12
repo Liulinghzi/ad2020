@@ -1,14 +1,14 @@
 ###
  # @Author: your name
  # @Date: 2020-05-09 15:28:53
- # @LastEditTime: 2020-05-12 14:05:50
+ # @LastEditTime: 2020-05-12 20:13:29
  # @LastEditors: Please set LastEditors
  # @Description: In User Settings Edit
  # @FilePath: /ad2020/run.sh
  ###
 
 
-python3 train.py  --train_features_path ../5-8/train_features.pkl  --train_labels_path ../5-8/train_labels.pkl --vocab_list ../5-8/vocab_size_list.pkl --num_heads 2 --d_model 4\
+python3 train.py  --train_features_path ../5-8/train_features.pkl  --train_labels_path ../5-8/train_labels.pkl --vocab_list ../5-8/vocab_size_list.pkl --num_heads 2 --d_model 4  
 
 
 
@@ -19,7 +19,6 @@ python3 train.py  --train_features_path ../5-8/train_features.pkl  --train_label
     # --train_age_gender_path ../5-8/sample_train_age_gender.pkl\
 # # # test
 # # --test\
-# # --ckpt\
 # # --testdir\
 # # training scheme
 #     --batch_size 128\

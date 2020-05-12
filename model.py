@@ -146,6 +146,15 @@ class Transformer:
 
         return loss, train_op, global_step, summaries
 
+    def infer(self, sparse_features, dense_features, labels):
+        age_logits, gender_logits, src_masks = self.encode(sparse_features, dense_features, labels)
+
+        pred_age = tf.argmax(age_logits, axis=1)
+        pred_gender = tf.argmax(gender_logits, axis=1)
+        return pred_age, pred_gender
+
+
+
     def eval(self, sparse_features, dense_features, labels):
         '''Predicts autoregressively
         At inference, input ys is ignored.
