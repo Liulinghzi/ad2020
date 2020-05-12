@@ -1,9 +1,9 @@
 ###
  # @Author: your name
  # @Date: 2020-05-12 20:22:55
- # @LastEditTime: 2020-05-12 20:27:13
+ # @LastEditTime: 2020-05-12 20:45:05
  # @LastEditors: Please set LastEditors
  # @Description: In User Settings Edit
  # @FilePath: /ad2020/test.sh
  ###
-python3 test.py  --test_features_path ../../5-8/test_features.pkl  --test_labels_path ../../5-8/test_labels.pkl --vocab_list ../../5-8/vocab_size_list.pkl --num_heads 2 --d_model 4  --ckpt log/1
+python3 test.py  --test_features_path ../../5-8/test_features.pkl  --test_labels_path ../../5-8/test_labels.pkl --vocab_list ../../5-8/vocab_size_list.pkl --num_heads 2 --d_model 64  --ckpt log/1
