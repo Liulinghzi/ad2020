@@ -152,9 +152,9 @@ class Transformer:
         optimizer = tf.train.AdamOptimizer(lr)
         train_op = optimizer.minimize(loss, global_step=global_step)
 
-        tf.summary.scalar('lr', lr)
-        tf.summary.scalar("loss", loss)
-        tf.summary.scalar("global_step", global_step)
+        # tf.summary.scalar('lr', lr)
+        # tf.summary.scalar("loss", loss)
+        # tf.summary.scalar("global_step", global_step)
 
         summaries = tf.summary.merge_all()
 
