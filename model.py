@@ -73,6 +73,7 @@ class Transformer:
             # 这里的enc需要从embedding_dict中的多个matrix中lookup，然后concat，作为一个enc
 
             age_gender_enc = concated_enc
+            print('age_gender_enc', age_gender_enc.shape)
             
             ## Blocks
             for i in range(self.hp.num_blocks):
@@ -86,11 +87,13 @@ class Transformer:
                                               dropout_rate=self.hp.dropout_rate,
                                               training=training,
                                               causality=False)
+                    print('age_gender_enc', age_gender_enc.shape)
                     # feed forward
                     age_gender_enc = ff(age_gender_enc, num_units=[self.hp.d_ff, age_gender_enc.shape[-1]])
 
 
         age_gender_enc = tf.reduce_sum(age_gender_enc, axis=1)
+        print('age_gender_enc', age_gender_enc.shape)
         age_gender_logits = tf.layers.dense(age_gender_enc, self.hp.age_classes*self.hp.gender_classes)        
         
         return age_gender_logits, src_masks

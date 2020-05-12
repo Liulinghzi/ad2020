@@ -63,3 +63,6 @@ class Hparams:
     parser.add_argument('--ckpt', help="checkpoint file path")
     parser.add_argument('--test_batch_size', default=128, type=int)
     parser.add_argument('--testdir', default="test/1", help="test result dir")
+
+
+    
