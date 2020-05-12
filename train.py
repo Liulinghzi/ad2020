@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-12 15:15:48
+@LastEditTime: 2020-05-12 15:18:05
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/train.py
@@ -82,9 +82,9 @@ with tf.Session() as sess:
             cpred_age, cpred_gender = sess.run([pred_age, pred_gender])
             clables = sess.run([labels])
 
-            print(cpred_age.head())
-            print(cpred_gender.head())
-            print(clables.head())
+            print(cpred_age[:5])
+            print(cpred_gender[:5])
+            print(clables[:5])
             print(_loss)
 
             # logging.info("# test evaluation")
