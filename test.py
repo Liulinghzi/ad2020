@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-09 14:02:59
-@LastEditTime: 2020-05-12 20:25:41
+@LastEditTime: 2020-05-12 20:26:26
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/test.py
@@ -36,8 +36,8 @@ load_hparams(hp, hp.ckpt)
 
 logging.info("# Prepare test batches")
 test_batches, num_test_batches, num_test_samples  = get_batch(
-    features_path=hp.test_features_path, 
-    labels_path=hp.test_labels_path, 
+    train_features_path=hp.test_features_path, 
+    train_labels_path=hp.test_labels_path, 
     maxlen=10000, 
     batch_size=hp.test_batch_size, 
     shuffle=False
