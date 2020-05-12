@@ -23,12 +23,12 @@ class Transformer:
         with open(self.hp.vocab_list, 'rb') as f:
             self.hp.vocab_list = pickle.load(f)
         # 前两个特征是dense，1维
-        self.embedding_creative_id = get_token_embeddings(self.hp.vocab_list[0], self.hp.d_model, zero_pad=True)
-        self.embedding_ad_id = get_token_embeddings(self.hp.vocab_list[1], self.hp.d_model, zero_pad=True)
-        self.embedding_product_id = get_token_embeddings(self.hp.vocab_list[2], self.hp.d_model, zero_pad=True)
-        self.embedding_product_category = get_token_embeddings(self.hp.vocab_list[3], self.hp.d_model, zero_pad=True)
-        self.embedding_advertiser_id = get_token_embeddings(self.hp.vocab_list[4], self.hp.d_model, zero_pad=True)
-        self.embedding_industry = get_token_embeddings(self.hp.vocab_list[5], self.hp.d_model, zero_pad=True)
+        self.embedding_creative_id = get_token_embeddings(self.hp.vocab_list[0], self.hp.d_model, creative_id, zero_pad=True)
+        self.embedding_ad_id = get_token_embeddings(self.hp.vocab_list[1], self.hp.d_model, ad_id, zero_pad=True)
+        self.embedding_product_id = get_token_embeddings(self.hp.vocab_list[2], self.hp.d_model, product_id, zero_pad=True)
+        self.embedding_product_category = get_token_embeddings(self.hp.vocab_list[3], self.hp.d_model, product_category, zero_pad=True)
+        self.embedding_advertiser_id = get_token_embeddings(self.hp.vocab_list[4], self.hp.d_model, advertiser_id, zero_pad=True)
+        self.embedding_industry = get_token_embeddings(self.hp.vocab_list[5], self.hp.d_model, industry, zero_pad=True)
         '''
         这里就不只是一个embeddings了而是
         self.embedding_dict = {feat: get_token_embeddings for feat in features}
