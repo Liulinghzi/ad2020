@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-09 14:02:59
-@LastEditTime: 2020-05-12 10:21:34
+@LastEditTime: 2020-05-12 10:22:57
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/data_load.py
@@ -23,7 +23,7 @@ def load_data(train_features_path, maxlen):
                     seq = seq[:maxlen]
             res.append()
 
-    return *res
+    return res
 
 def load_target(train_labels_path):
     with open(train_labels_path, 'rb') as f:
