@@ -23,21 +23,28 @@ class Transformer:
         with open(self.hp.vocab_list, 'rb') as f:
             self.hp.vocab_list = pickle.load(f)
         # 前两个特征是dense，1维
-        self.embedding_list = [get_token_embeddings(self.hp.vocab_dict[i], self.hp.d_model, zero_pad=True) for i in range(len(self.hp.vocab_list))]
+        self.embedding_creative_id = get_token_embeddings(self.hp.vocab_dict[0], self.hp.d_model, zero_pad=True)
+        self.embedding_ad_id = get_token_embeddings(self.hp.vocab_dict[1], self.hp.d_model, zero_pad=True)
+        self.embedding_product_id = get_token_embeddings(self.hp.vocab_dict[2], self.hp.d_model, zero_pad=True)
+        self.embedding_product_category = get_token_embeddings(self.hp.vocab_dict[3], self.hp.d_model, zero_pad=True)
+        self.embedding_advertiser_id = get_token_embeddings(self.hp.vocab_dict[4], self.hp.d_model, zero_pad=True)
+        self.embedding_industry = get_token_embeddings(self.hp.vocab_dict[5], self.hp.d_model, zero_pad=True)
         '''
         这里就不只是一个embeddings了而是
         self.embedding_dict = {feat: get_token_embeddings for feat in features}
         '''
 
-    def encode(self, creative_id, ad_id, product_id, product_category, advertiser_id, industry, time, click_times, age, gender, training=True):
+    def encode(self, sparse_features, dense_features, labels, training=True):
         '''
         Returns
         memory: encoder outputs. (N, T1, d_model)
         '''
         with tf.variable_scope("encoder", reuse=tf.AUTO_REUSE):
+            creative_id, ad_id, product_id, product_category, advertiser_id, industry = sparse_features
+            time, click_times = dense_features
+            age, gender = labels
 
             # src_masks
-            # dense_seqs形状为[bs, seq_len, 2]
             # 在get_batch的时候用了0来作为pad
             src_masks = tf.math.equal(creative_id, 0) # (N, T1)
 
@@ -50,24 +57,33 @@ class Transformer:
             # ]
             # [bs, maxlen, feat_num]
             # 需要在feat_num的维度进行切分，分别lookup，再FM和concate，FM以后在加
-            splited_sparse = tf.split(axis=2, value=sparse_seqs, num_split=sparse_seqs.shape[2])
-            splited_sparse = [tf.reshape(xi, (-1, xi.shape[1])) for xi in splited_sparse]
 
-            encs = [tf.nn.embedding_lookup(self.embedding_list[i], splited_sparse[i]) for i in range(len(splited_sparse))]
-            # lookup后每个encs应该是 [[emb][emb]]
-            encs.append(dense_seqs)
+            creative_id_enc = tf.nn.embedding_lookup(self.embedding_creative_id, creative_id)
+            ad_id_enc = tf.nn.embedding_lookup(self.embedding_ad_id, ad_id)
+            product_id_enc = tf.nn.embedding_lookup(self.embedding_product_id, product_id)
+            product_category_enc = tf.nn.embedding_lookup(self.embedding_product_category, product_category)
+            advertiser_id_enc = tf.nn.embedding_lookup(self.embedding_advertiser_id, advertiser_id)
+            industry_enc = tf.nn.embedding_lookup(self.embedding_industry, industry)
 
-            enc = tf.concat(concat_dim=1, values=encs)
+
+            # enbedding的维度是[bs, seqlen, embedding]
+            # dense_features的维度是[bs, seqlen]
+            encs = [creative_id_enc, ad_id_enc, product_id_enc, product_category_enc, advertiser_id_enc, industry_enc]
+            for enc in encs:
+                enc *= self.hp.d_model**0.5 # scale
+                enc += positional_encoding(enc, self.hp.maxlen)
+                enc = tf.layers.dropout(enc, self.hp.dropout_rate, training=training)
+
+            encs += [time, click_times]
+
+            concated_enc = tf.concat(concat_dim=1, values=encs)
             # concate之后应该是[con_emb, con_emb]
             
-            # enc = tf.nn.embedding_lookup(self.embeddings, x) # (N, T1, d_model)
-            enc *= self.hp.d_model**0.5 # scale
+
             # 这里的enc需要从embedding_dict中的多个matrix中lookup，然后concat，作为一个enc
 
-            enc += positional_encoding(enc, self.hp.maxlen)
-            enc = tf.layers.dropout(enc, self.hp.dropout_rate, training=training)
-            age_enc = enc
-            gender_enc = enc
+            age_enc = concated_enc
+            gender_enc = concated_enc
             
             ## Blocks
             for i in range(self.hp.num_blocks):
@@ -102,7 +118,7 @@ class Transformer:
         
         return age_logits, gender_logits, src_masks
 
-    def train(self, creative_id, ad_id, product_id, product_category, advertiser_id, industry, time, click_times, age, gender):
+    def train(self, sparse_features, dense_features, labels):
         '''
         Returns
         loss: scalar.
@@ -110,8 +126,9 @@ class Transformer:
         global_step: scalar.
         summaries: training summary node
         '''
+        
         # forward
-        age_logits, gender_logits, src_masks = self.encode(creative_id, ad_id, product_id, product_category, advertiser_id, industry, time, click_times, age, gender)
+        age_logits, gender_logits, src_masks = self.encode(sparse_features, dense_features, labels)
 
         # train scheme
         age_ = label_smoothing(tf.one_hot(age, depth=self.hp.age_classes))
