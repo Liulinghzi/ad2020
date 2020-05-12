@@ -20,6 +20,7 @@ class Transformer:
     def __init__(self, hp):
         self.hp = hp
 
+        print(self.hp.vocab_list)
         with open(self.hp.vocab_list, 'rb') as f:
             self.hp.vocab_list = pickle.load(f)
         # 前两个特征是dense，1维
