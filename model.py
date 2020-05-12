@@ -48,18 +48,6 @@ class Transformer:
             # 在get_batch的时候用了0来作为pad
             src_masks = tf.math.equal(product_id, 0) # (N, T1)
 
-            # embedding
-            # x的形状为[
-            #     [[1,1,1,1],[2,2,2,1]],
-            #     [[1,1,1,1],[2,2,2,1]],
-            #     [[1,1,1,1],[2,2,2,1]],
-            #     [[1,1,1,1],[2,2,2,1]],
-            # ]
-            # [bs, maxlen, feat_num]
-            # 需要在feat_num的维度进行切分，分别lookup，再FM和concate，FM以后在加
-
-            # creative_id_enc = tf.nn.embedding_lookup(self.embedding_creative_id, creative_id)
-            # ad_id_enc = tf.nn.embedding_lookup(self.embedding_ad_id, ad_id)
             product_id_enc = tf.nn.embedding_lookup(self.embedding_product_id, product_id)
             product_category_enc = tf.nn.embedding_lookup(self.embedding_product_category, product_category)
             advertiser_id_enc = tf.nn.embedding_lookup(self.embedding_advertiser_id, advertiser_id)
@@ -158,22 +146,23 @@ class Transformer:
 
         return loss, train_op, global_step, summaries
 
-    # def eval(self, x, y_age, y_gender):
-    #     '''Predicts autoregressively
-    #     At inference, input ys is ignored.
-    #     Returns
-    #     y_hat: (N, T2)
-    #     '''
-    #     age_logits, gender_logits, src_masks = self.encode(x, False)
+    def eval(self, sparse_features, dense_features, labels):
+        '''Predicts autoregressively
+        At inference, input ys is ignored.
+        Returns
+        y_hat: (N, T2)
+        '''
 
-    #     logging.info("Inference graph is being built. Please be patient.")
-    #     pred_age = tf.argmax(age_logits, axis=1)
-    #     pred_gender = tf.argmax(gender_logits, axis=1)
-    #     # monitor a random sample
+        age_logits, gender_logits, src_masks = self.encode(sparse_features, dense_features, labels)
 
-    #     tf.summary.text("pred_age", pred_age)
-    #     tf.summary.text("pred_gender", pred_gender)
-    #     summaries = tf.summary.merge_all()
+        logging.info("Inference graph is being built. Please be patient.")
+        pred_age = tf.argmax(age_logits, axis=1)
+        pred_gender = tf.argmax(gender_logits, axis=1)
+        # monitor a random sample
 
-    #     return pred_age, pred_gender, summaries
+        tf.summary.text("pred_age", pred_age)
+        tf.summary.text("pred_gender", pred_gender)
+        summaries = tf.summary.merge_all()
+
+        return pred_age, pred_gender, summaries
 

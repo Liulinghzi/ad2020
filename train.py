@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-12 14:02:20
+@LastEditTime: 2020-05-12 14:20:24
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/train.py
@@ -37,7 +37,7 @@ save_hparams(hp, hp.logdir)
 
 logging.info("# Prepare train/eval batches")
 train_batches, num_train_batches, num_train_samples = get_batch(hp.train_features_path, hp.train_labels_path, hp.maxlen, hp.batch_size, shuffle=True)
-# eval_batches, num_eval_batches, num_eval_samples = get_batch(hp.eval_dense_path, hp.eval_sparse_path, hp.eval_age_gender_path, 100000 , hp.batch_size, shuffle=False)
+# eval_batches, num_eval_batches, num_eval_samples = get_batch(hp.eval_features_path, hp.eval_labels_path, 100000 , hp.batch_size, shuffle=False)
 
 # create a iterator of the correct shape and type
 iter = tf.data.Iterator.from_structure(train_batches.output_types, train_batches.output_shapes)
@@ -52,7 +52,7 @@ loss, train_op, global_step, train_summaries = m.train(sparse_features, dense_fe
 
 logging.info("# Session")
 saver = tf.train.Saver(max_to_keep=hp.num_epochs)
-# y_hat, eval_summaries = m.eval(xs, ys)
+# age_hat, gender_hat, eval_summaries = m.eval(xs, ys)
 # y_hat = m.infer(xs, ys)
 
 with tf.Session() as sess:
@@ -78,13 +78,14 @@ with tf.Session() as sess:
         if _gs and _gs % num_train_batches == 0:
             logging.info("epoch {} is done".format(epoch))
             _loss = sess.run(loss) # train loss
+            print(_loss)
 
             # logging.info("# test evaluation")
             # _, _eval_summaries = sess.run([eval_init_op, eval_summaries])
             # summary_writer.add_summary(_eval_summaries, _gs)
 
             # logging.info("# get hypotheses")
-            # hypotheses = get_hypotheses(num_eval_batches, num_eval_samples, sess, y_hat, m.idx2token)
+            # age_hypotheses, gender_hypotheses = get_hypotheses(num_eval_batches, num_eval_samples, sess, age_hat, gender_hat)
 
             # logging.info("# write results")
             model_output = "ckpt_%02d" % (epoch)
@@ -92,9 +93,6 @@ with tf.Session() as sess:
             # translation = os.path.join(hp.evaldir, model_output)
             # with open(translation, 'w') as fout:
             #     fout.write("\n".join(hypotheses))
-
-            # logging.info("# calc bleu score and append it to translation")
-            # calc_bleu(hp.eval3, translation)
 
             logging.info("# save models")
             ckpt_name = os.path.join(hp.logdir, model_output)

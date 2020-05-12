@@ -127,7 +127,7 @@ def save_variable_specs(fpath):
         fout.write("\n".join(params))
     logging.info("Variables info has been saved.")
 
-def get_hypotheses(num_batches, num_samples, sess, tensor, dict):
+def get_hypotheses(num_batches, num_samples, sess, age_hat, gender_hat):
     '''Gets hypotheses.
     num_batches: scalar.
     num_samples: scalar.
@@ -138,13 +138,16 @@ def get_hypotheses(num_batches, num_samples, sess, tensor, dict):
     Returns
     hypotheses: list of sents
     '''
-    hypotheses = []
+    age_hypotheses = []
+    gender_hypotheses = []
     for _ in range(num_batches):
-        h = sess.run(tensor)
-        hypotheses.extend(h.tolist())
-    hypotheses = postprocess(hypotheses, dict)
+        ah, gh = sess.run([age_hat, gender_hat])
+        age_hypotheses.extend(ah.tolist())
+        gender_hypotheses.extend(gh.tolist())
+    age_hypotheses = postprocess(age_hypotheses, dict)
+    gender_hypotheses = postprocess(gender_hypotheses, dict)
 
-    return hypotheses[:num_samples]
+    return age_hypotheses[:num_samples], gender_hypotheses[:num_samples]
 
 def calc_bleu(ref, translation):
     '''Calculates bleu score and appends the report to translation
