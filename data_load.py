@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-09 14:02:59
-@LastEditTime: 2020-05-12 11:51:14
+@LastEditTime: 2020-05-12 11:58:28
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/data_load.py
@@ -32,38 +32,41 @@ def generator_fn(creative_id, ad_id, product_id, product_category, advertiser_id
 
     for idx in range(len(creative_id)):
         yield (
-            encode(creative_id[idx]),
-            encode(ad_id[idx]),
-            encode(product_id[idx]),
-            encode(product_category[idx]),
-            encode(advertiser_id[idx]),
-            encode(industry[idx]),
-            encode(time[idx]),
-            encode(click_times[idx]),
-            encode(age[idx]),
-            encode(gender[idx])
+            (
+                encode(creative_id[idx]),
+                encode(ad_id[idx]),
+                encode(product_id[idx]),
+                encode(product_category[idx]),
+                encode(advertiser_id[idx]),
+                encode(industry[idx])
+                ),
+            (
+                encode(time[idx]),
+                encode(click_times[idx])
+                )
+            (
+                encode(age[idx]),
+                encode(gender[idx])
+                )
             )
 
 def input_fn(features, labels, batch_size, shuffle=False):
     shapes = (
-        (
-            [None], [None], [None], [None], [None], [None], 
-            [None], [None],
-            [], []
-        )
+        ([None], [None], [None], [None], [None], [None]), 
+        ([None], [None]),
+        ([], [])
     )
     types = (
-        (
-            tf.int32, tf.int32, tf.int32, tf.int32, tf.int32, tf.int32, 
-            tf.float32, tf.float32,
-            tf.int32, tf.int32)
-        )
+        (tf.int32, tf.int32, tf.int32, tf.int32, tf.int32, tf.int32), 
+        (tf.float32, tf.float32),
+        (tf.int32, tf.int32)
+    )
     paddings = (
-        (
-            0, 0, 0, 0, 0, 0, 
-            0.0, 0.0,
-            0, 0)
-        )
+        (0, 0, 0, 0, 0, 0), 
+        (0.0, 0.0),
+        (0, 0)
+    )
+    
     dataset = tf.data.Dataset.from_generator(
         generator_fn,
         output_shapes=shapes,

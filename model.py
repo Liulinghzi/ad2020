@@ -29,7 +29,7 @@ class Transformer:
         self.embedding_dict = {feat: get_token_embeddings for feat in features}
         '''
 
-    def encode(self, dense_seqs, sparse_seqs, mask_flag, training=True):
+    def encode(self, creative_id, ad_id, product_id, product_category, advertiser_id, industry, time, click_times, age, gender, training=True):
         '''
         Returns
         memory: encoder outputs. (N, T1, d_model)
@@ -39,7 +39,7 @@ class Transformer:
             # src_masks
             # dense_seqs形状为[bs, seq_len, 2]
             # 在get_batch的时候用了0来作为pad
-            src_masks = tf.math.equal(mask_flag, 0) # (N, T1)
+            src_masks = tf.math.equal(creative_id, 0) # (N, T1)
 
             # embedding
             # x的形状为[
@@ -102,7 +102,7 @@ class Transformer:
         
         return age_logits, gender_logits, src_masks
 
-    def train(self, dense_seqs, sparse_seqs, age, gender, mask_flag):
+    def train(self, creative_id, ad_id, product_id, product_category, advertiser_id, industry, time, click_times, age, gender):
         '''
         Returns
         loss: scalar.
@@ -111,7 +111,7 @@ class Transformer:
         summaries: training summary node
         '''
         # forward
-        age_logits, gender_logits, src_masks = self.encode(dense_seqs, sparse_seqs, mask_flag)
+        age_logits, gender_logits, src_masks = self.encode(creative_id, ad_id, product_id, product_category, advertiser_id, industry, time, click_times, age, gender)
 
         # train scheme
         age_ = label_smoothing(tf.one_hot(age, depth=self.hp.age_classes))
