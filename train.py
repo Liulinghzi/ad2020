@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-12 15:30:07
+@LastEditTime: 2020-05-12 15:31:37
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/train.py
@@ -48,7 +48,7 @@ train_init_op = iter.make_initializer(train_batches)
 
 logging.info("# Load model")
 m = Transformer(hp)
-loss, train_op, global_step, train_summaries,age_gender_logits,age_gender_ = m.train(sparse_features, dense_features, labels)
+loss, train_op, global_step, train_summaries = m.train(sparse_features, dense_features, labels)
 # age_hat, gender_hat, eval_summaries = m.eval(xs, ys)
 pred_age, pred_gender = m.infer(sparse_features, dense_features)
 
@@ -78,7 +78,7 @@ with tf.Session() as sess:
 
         print(cpred_age[:5])
         print(cpred_gender[:5])
-        print(clables[:5])
+        print(clabels[:5])
 
         if _gs and _gs % num_train_batches == 0:
             logging.info("epoch {} is done".format(epoch))
