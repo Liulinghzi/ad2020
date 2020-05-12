@@ -34,7 +34,7 @@ class Transformer:
         self.embedding_dict = {feat: get_token_embeddings for feat in features}
         '''
 
-    def encode(self, sparse_features, dense_features, labels, training=True):
+    def encode(self, sparse_features, dense_features, labels=None, training=True):
         '''
         Returns
         memory: encoder outputs. (N, T1, d_model)
@@ -149,4 +149,19 @@ class Transformer:
         summaries = tf.summary.merge_all()
 
         return pred_age, pred_gender, summaries
+
+    def infer(self, sparse_features, dense_features):
+        '''Predicts autoregressively
+        At inference, input ys is ignored.
+        Returns
+        y_hat: (N, T2)
+        '''
+
+        age_gender_logits, src_masks = self.encode(sparse_features, dense_features)
+
+        pred_age_gender = tf.argmax(age_gender_logits, axis=1)
+        pred_age = tf.mod(pred_age_gender, 10)
+        pred_gender = tf.ceil(tf.divide(pred_age_gender, 10))
+
+        return pred_age, pred_gender
 

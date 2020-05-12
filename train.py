@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-12 14:20:24
+@LastEditTime: 2020-05-12 15:15:48
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/train.py
@@ -49,11 +49,12 @@ train_init_op = iter.make_initializer(train_batches)
 logging.info("# Load model")
 m = Transformer(hp)
 loss, train_op, global_step, train_summaries = m.train(sparse_features, dense_features, labels)
+# age_hat, gender_hat, eval_summaries = m.eval(xs, ys)
+pred_age, pred_gender = m.infer(sparse_features, dense_features)
 
 logging.info("# Session")
 saver = tf.train.Saver(max_to_keep=hp.num_epochs)
-# age_hat, gender_hat, eval_summaries = m.eval(xs, ys)
-# y_hat = m.infer(xs, ys)
+
 
 with tf.Session() as sess:
     ckpt = tf.train.latest_checkpoint(hp.logdir)
@@ -78,6 +79,12 @@ with tf.Session() as sess:
         if _gs and _gs % num_train_batches == 0:
             logging.info("epoch {} is done".format(epoch))
             _loss = sess.run(loss) # train loss
+            cpred_age, cpred_gender = sess.run([pred_age, pred_gender])
+            clables = sess.run([labels])
+
+            print(cpred_age.head())
+            print(cpred_gender.head())
+            print(clables.head())
             print(_loss)
 
             # logging.info("# test evaluation")
