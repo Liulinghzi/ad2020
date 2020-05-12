@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-09 14:02:59
-@LastEditTime: 2020-05-12 12:51:45
+@LastEditTime: 2020-05-12 12:52:58
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/data_load.py
@@ -56,7 +56,7 @@ def input_fn(features, labels, batch_size, shuffle=False):
     shapes = (
         ([None], [None], [None], [None], [None], [None]), 
         ([None], [None]),
-        ([], [])
+        ([1], [1])
     )
     types = (
         (tf.int32, tf.int32, tf.int32, tf.int32, tf.int32, tf.int32), 
