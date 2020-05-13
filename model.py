@@ -122,7 +122,7 @@ class Transformer:
 
         # train scheme
         
-        mse_age = tf.losses.mean_squared_error(logits=age_logits, labels=age)
+        mse_age = tf.losses.mean_squared_error(predictions=age_logits, labels=age)
         
         # loss = tf.reduce_sum(ce * nonpadding) / (tf.reduce_sum(nonpadding) + 1e-7)
         loss = tf.reduce_mean(mse_age)
