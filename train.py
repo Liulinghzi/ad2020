@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-12 17:14:45
+@LastEditTime: 2020-05-13 10:07:15
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/train.py
@@ -18,7 +18,7 @@ import tensorflow as tf
 from model import Transformer
 from tqdm import tqdm
 from data_load import get_batch
-from utils import save_hparams, save_variable_specs, get_hypotheses, calc_bleu
+from utils import save_hparams, save_variable_specs
 import os
 from hparams import Hparams
 import math
@@ -49,8 +49,8 @@ train_init_op = iter.make_initializer(train_batches)
 logging.info("# Load model")
 m = Transformer(hp)
 loss, train_op, global_step, train_summaries = m.train(sparse_features, dense_features, labels)
-age_hat, gender_hat, eval_summaries = m.eval(sparse_features, dense_features, labels)
-pred_age, pred_gender,pred_age_gender = m.infer(sparse_features, dense_features)
+# age_hat, gender_hat, eval_summaries = m.eval(sparse_features, dense_features, labels)
+# pred_age, pred_gender,pred_age_gender = m.infer(sparse_features, dense_features)
 
 logging.info("# Session")
 saver = tf.train.Saver(max_to_keep=hp.num_epochs)
@@ -81,11 +81,11 @@ with tf.Session() as sess:
             _loss = sess.run(loss) # train loss
             print(_loss)
 
-            logging.info("# test evaluation")
-            _, _eval_summaries = sess.run([eval_init_op, eval_summaries])
-            summary_writer.add_summary(_eval_summaries, _gs)
+            # logging.info("# test evaluation")
+            # _, _eval_summaries = sess.run([eval_init_op, eval_summaries])
+            # summary_writer.add_summary(_eval_summaries, _gs)
 
-            calc_metric(sess, age_hat, gender_hat, labels)
+            # calc_metric(sess, age_hat, gender_hat, labels)
 
             logging.info("# write results")
             model_output = "ckpt_%02d" % (epoch)

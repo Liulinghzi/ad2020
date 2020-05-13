@@ -42,7 +42,7 @@ class Transformer:
         with tf.variable_scope("encoder", reuse=tf.AUTO_REUSE):
             product_id, product_category, advertiser_id, industry = sparse_features
             time, click_times = dense_features
-            age_gender = labels
+            age = labels
 
             # src_masks
             # 在get_batch的时候用了0来作为pad
@@ -81,31 +81,31 @@ class Transformer:
 
             # 这里的enc需要从embedding_dict中的多个matrix中lookup，然后concat，作为一个enc
 
-            age_gender_enc = concated_enc
-            print('age_gender_enc', age_gender_enc.shape)
+            age_enc = concated_enc
+            print('age_enc', age_enc.shape)
             
             ## Blocks
             for i in range(self.hp.num_blocks):
-                with tf.variable_scope("num_blocks_age_gender_{}".format(i), reuse=tf.AUTO_REUSE):
+                with tf.variable_scope("num_blocks_age_{}".format(i), reuse=tf.AUTO_REUSE):
                     # self-attention
-                    age_gender_enc = multihead_attention(queries=age_gender_enc,
-                                              keys=age_gender_enc,
-                                              values=age_gender_enc,
+                    age_enc = multihead_attention(queries=age_enc,
+                                              keys=age_enc,
+                                              values=age_enc,
                                               key_masks=src_masks,
                                               num_heads=self.hp.num_heads,
                                               dropout_rate=self.hp.dropout_rate,
                                               training=training,
                                               causality=False)
-                    print('age_gender_enc', age_gender_enc.shape)
+                    print('age_enc', age_enc.shape)
                     # feed forward
-                    age_gender_enc = ff(age_gender_enc, num_units=[self.hp.d_ff, age_gender_enc.shape[-1]])
+                    age_enc = ff(age_enc, num_units=[self.hp.d_ff, age_enc.shape[-1]])
 
 
-        age_gender_enc = tf.reduce_sum(age_gender_enc, axis=1)
-        print('age_gender_enc', age_gender_enc.shape)
-        age_gender_logits = tf.layers.dense(age_gender_enc, self.hp.age_classes*self.hp.gender_classes)        
+        age_enc = tf.reduce_sum(age_enc, axis=1)
+        print('age_enc', age_enc.shape)
+        age_logits = tf.layers.dense(age_enc, self.hp.age_classes)        
         
-        return age_gender_logits, src_masks
+        return age_logits, src_masks
 
     def train(self, sparse_features, dense_features, labels):
         '''
@@ -117,16 +117,16 @@ class Transformer:
         '''
         
         # forward
-        age_gender_logits, src_masks = self.encode(sparse_features, dense_features, labels)
-        age_gender = labels
+        age_logits, src_masks = self.encode(sparse_features, dense_features, labels)
+        age = labels
 
         # train scheme
-        age_gender_ = label_smoothing(tf.one_hot(age_gender, depth=self.hp.age_classes*self.hp.gender_classes))
+        age_ = label_smoothing(tf.one_hot(age, depth=self.hp.age_classes))
         
-        ce_age_gender = tf.nn.softmax_cross_entropy_with_logits_v2(logits=age_gender_logits, labels=age_gender_)
+        ce_age = tf.nn.softmax_cross_entropy_with_logits_v2(logits=age_logits, labels=age_)
         
         # loss = tf.reduce_sum(ce * nonpadding) / (tf.reduce_sum(nonpadding) + 1e-7)
-        loss = tf.reduce_mean(ce_age_gender)
+        loss = tf.reduce_mean(ce_age)
 
         global_step = tf.train.get_or_create_global_step()
         lr = noam_scheme(self.hp.lr, global_step, self.hp.warmup_steps)
@@ -179,11 +179,9 @@ class Transformer:
         y_hat: (N, T2)
         '''
 
-        age_gender_logits, src_masks = self.encode(sparse_features, dense_features)
+        age_logits, src_masks = self.encode(sparse_features, dense_features)
 
-        pred_age_gender = tf.argmax(age_gender_logits, axis=1)
-        pred_age = tf.mod(pred_age_gender, 10) + 1
-        pred_gender = tf.ceil(tf.divide(pred_age_gender + 1, 10))
+        pred_age = tf.argmax(age_logits, axis=1) + 1
 
-        return pred_age, pred_gender
+        return pred_age
 

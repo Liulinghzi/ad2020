@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-09 14:02:59
-@LastEditTime: 2020-05-12 16:41:43
+@LastEditTime: 2020-05-13 09:58:58
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/data_load.py
@@ -45,7 +45,7 @@ def generator_fn(product_id, product_category, advertiser_id, industry, time, cl
                 encode(click_times[idx])
                 ),
             (
-                encode(age[idx])[0] + (encode(gender[idx])[0] - 1) * 10
+                encode(age[idx])
                 )
                 # age取值1-10， gender取值1-2
                 # age_gender取值1-20
