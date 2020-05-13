@@ -103,7 +103,7 @@ class Transformer:
 
         age_enc = tf.reduce_sum(age_enc, axis=1)
         print('age_enc', age_enc.shape)
-        age_logits = tf.layers.dense(age_enc, self.hp.age_classes)        
+        age_logits = tf.layers.dense(age_enc, 1)        
         
         return age_logits, src_masks
 
@@ -121,12 +121,11 @@ class Transformer:
         age = labels
 
         # train scheme
-        age_ = label_smoothing(tf.one_hot(age, depth=self.hp.age_classes))
         
-        ce_age = tf.nn.softmax_cross_entropy_with_logits_v2(logits=age_logits, labels=age_)
+        mse_age = tf.losses.mean_squared_error(logits=age_logits, labels=age)
         
         # loss = tf.reduce_sum(ce * nonpadding) / (tf.reduce_sum(nonpadding) + 1e-7)
-        loss = tf.reduce_mean(ce_age)
+        loss = tf.reduce_mean(mse_age)
 
         global_step = tf.train.get_or_create_global_step()
         lr = noam_scheme(self.hp.lr, global_step, self.hp.warmup_steps)
@@ -181,7 +180,7 @@ class Transformer:
 
         age_logits, src_masks = self.encode(sparse_features, dense_features)
 
-        pred_age = tf.argmax(age_logits, axis=1) + 1
+        pred_age = tf.round(age_logits, axis=1)
 
         return pred_age
 
