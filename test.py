@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-09 14:02:59
-@LastEditTime: 2020-05-13 10:17:41
+@LastEditTime: 2020-05-13 10:19:24
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/test.py
@@ -62,25 +62,23 @@ with tf.Session() as sess:
         
     sess.run(test_init_op)
     predicted_age = []
-    predicted_gender = []
     
     for i in tqdm(range(num_test_batches)):
-        cpred_age, cpred_gender = sess.run([pred_age, pred_gender])
+        cpred_age = sess.run(pred_age)
         predicted_age.extend(cpred_age.tolist())
-        predicted_gender.extend(cpred_gender.tolist())
     print(len(predicted_age))
 
 
     import pandas as pd
     import pickle
-    with open('/home/liulingzhi1/notespace/ctr_practice/tencent/5-8/test_user_id.pkl', 'rb') as f:
-        user_id = pickle.load(f)
+    # with open('/home/liulingzhi1/notespace/ctr_practice/tencent/5-8/test_user_id.pkl', 'rb') as f:
+    #     user_id = pickle.load(f)
 
     submit =pd.DataFrame(
         {
             # 'user_id':user_id,
             'predicted_age': predicted_age,
-            'predicted_gender':predicted_gender,
+            # 'predicted_gender':predicted_gender,
         })
 
     submit.to_csv('submit.csv', index=False)
