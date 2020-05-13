@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-09 14:02:59
-@LastEditTime: 2020-05-12 21:15:33
+@LastEditTime: 2020-05-13 10:17:41
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/test.py
@@ -50,7 +50,7 @@ test_init_op = iter.make_initializer(test_batches)
 
 logging.info("# Load model")
 m = Transformer(hp)
-pred_age, pred_gender = m.infer(sparse_features, dense_features)
+pred_age = m.infer(sparse_features, dense_features)
 
 logging.info("# Session")
 with tf.Session() as sess:
