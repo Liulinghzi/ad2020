@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2020-05-09 14:02:59
-@LastEditTime: 2020-05-13 10:25:44
+@LastEditTime: 2020-05-13 10:34:29
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /ad2020/data_load.py
@@ -32,9 +32,7 @@ def encode(seq_str):
 
 
 def generator_fn(product_id, product_category, advertiser_id, industry, time, click_times, age, gender):
-    print(len(product_id))
     for idx in range(len(product_id)):
-        print(idx)
         yield (
             (
                 encode(product_id[idx]),
