@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-13 10:07:15
+@LastEditTime: 2020-05-13 10:08:57
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/train.py
@@ -37,7 +37,7 @@ save_hparams(hp, hp.logdir)
 
 logging.info("# Prepare train/eval batches")
 train_batches, num_train_batches, num_train_samples = get_batch(hp.train_features_path, hp.train_labels_path, hp.maxlen, hp.batch_size, shuffle=True)
-eval_batches, num_eval_batches, num_eval_samples = get_batch(hp.eval_features_path, hp.eval_labels_path, 100000 , hp.batch_size, shuffle=False)
+# eval_batches, num_eval_batches, num_eval_samples = get_batch(hp.eval_features_path, hp.eval_labels_path, 100000 , hp.batch_size, shuffle=False)
 
 # create a iterator of the correct shape and type
 iter = tf.data.Iterator.from_structure(train_batches.output_types, train_batches.output_shapes)
