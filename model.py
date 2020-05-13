@@ -118,7 +118,7 @@ class Transformer:
         
         # forward
         age_logits, src_masks = self.encode(sparse_features, dense_features, labels)
-        age = labels
+        age = tf.expand_dims(labels, -1)
 
         # train scheme
         
