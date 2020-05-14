@@ -1,14 +1,24 @@
 ###
  # @Author: your name
  # @Date: 2020-05-09 15:28:53
- # @LastEditTime: 2020-05-13 10:41:37
+ # @LastEditTime: 2020-05-14 13:48:15
  # @LastEditors: Please set LastEditors
  # @Description: In User Settings Edit
  # @FilePath: /ad2020/run.sh
  ###
 
 
-CUDA_VISIBLE_DEVICES=1 python3 train.py  --train_features_path ../../5-8/sample_train_features.pkl  --train_labels_path ../../5-8/sample_train_labels.pkl --vocab_list ../../5-8/sample_vocab_size_list.pkl --num_heads 2 --d_model 64 --num_blocks 3 --d_ff 512
+CUDA_VISIBLE_DEVICES=1 python3 train.py \
+--train_features_path ../../5-8/sample_train_features.pkl \
+--train_labels_path ../../5-8/sample_train_labels.pkl \
+--vocab_list ../../5-8/sample_vocab_size_list.pkl \
+--num_heads 2 \
+--d_model 64 \
+--num_blocks 3 \
+--d_ff 512 \
+--target_label gender \
+--pretrain 0
+
 CUDA_VISIBLE_DEVICES=1 python3 train.py  --train_features_path ../../5-8/train_features.pkl  --train_labels_path ../../5-8/train_labels.pkl --vocab_list ../../5-8/vocab_size_list.pkl --num_heads 2 --d_model 16 --num_blocks 3 --d_ff 512\
 
 

@@ -45,27 +45,29 @@ def get_token_embeddings(vocab_size, num_units, embedding_name, hp, zero_pad=Tru
     Returns
     weight variable: (V, E)
     '''
-    # with open(os.path.join(hp.pretrained_emb_path, '%s.emb' %(embedding_name)), 'rb') as f:
-    #     emb_value = pickle.load(f)
 
-    # with tf.variable_scope("shared_weight_matrix"):
-    #     embeddings = tf.get_variable(embedding_name,
-    #                                dtype=tf.float32,
-    #                                shape=(vocab_size, num_units),
-    #                                initializer=emb_value, 
-    #                                trainable=False)
-    #     if zero_pad:
-    #         embeddings = tf.concat((tf.zeros(shape=[1, num_units]),
-    #                                 embeddings[1:, :]), 0)
+    if hp.pretrain:
+        with open(os.path.join(hp.pretrained_emb_path, '%s.emb' %(embedding_name)), 'rb') as f:
+            emb_value = pickle.load(f)
 
-    with tf.variable_scope("shared_weight_matrix"):
-        embeddings = tf.get_variable(embedding_name,
-                                   dtype=tf.float32,
-                                   shape=(vocab_size, num_units),
-                                   initializer=tf.contrib.layers.xavier_initializer(), trainable=True)
-        if zero_pad:
-            embeddings = tf.concat((tf.zeros(shape=[1, num_units]),
-                                    embeddings[1:, :]), 0)
+        with tf.variable_scope("shared_weight_matrix"):
+            embeddings = tf.get_variable(embedding_name,
+                                    dtype=tf.float32,
+                                    shape=(vocab_size, num_units),
+                                    initializer=emb_value, 
+                                    trainable=False)
+            if zero_pad:
+                embeddings = tf.concat((tf.zeros(shape=[1, num_units]),
+                                        embeddings[1:, :]), 0)
+    else:
+        with tf.variable_scope("shared_weight_matrix"):
+            embeddings = tf.get_variable(embedding_name,
+                                    dtype=tf.float32,
+                                    shape=(vocab_size, num_units),
+                                    initializer=tf.contrib.layers.xavier_initializer(), trainable=True)
+            if zero_pad:
+                embeddings = tf.concat((tf.zeros(shape=[1, num_units]),
+                                        embeddings[1:, :]), 0)
     return embeddings
 
 def scaled_dot_product_attention(Q, K, V, key_masks,
