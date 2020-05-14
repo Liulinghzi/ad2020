@@ -120,7 +120,7 @@ class Transformer:
         '''
         
         # forward
-        target_logits, src_masks = self.encode(sparse_features, dense_features, labels, target_label)
+        target_logits, src_masks = self.encode(sparse_features, dense_features, labels, target_label=target_label)
         target = labels
 
         # train scheme

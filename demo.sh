@@ -8,7 +8,7 @@
  ###
 
 
-# CUDA_VISIBLE_DEVICES=1 python3 train.py  --train_features_path ../../5-8/sample_train_features.pkl  --train_labels_path ../../5-8/sample_train_labels.pkl --vocab_list ../../5-8/sample_vocab_size_list.pkl --num_heads 2 --d_model 64 --num_blocks 3 --d_ff 512
+CUDA_VISIBLE_DEVICES=1 python3 train.py  --train_features_path ../../5-8/sample_train_features.pkl  --train_labels_path ../../5-8/sample_train_labels.pkl --vocab_list ../../5-8/sample_vocab_size_list.pkl --num_heads 2 --d_model 64 --num_blocks 3 --d_ff 512
 CUDA_VISIBLE_DEVICES=1 python3 train.py  --train_features_path ../../5-8/train_features.pkl  --train_labels_path ../../5-8/train_labels.pkl --vocab_list ../../5-8/vocab_size_list.pkl --num_heads 2 --d_model 16 --num_blocks 3 --d_ff 512\
 
 
