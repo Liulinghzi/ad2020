@@ -46,7 +46,7 @@ def get_token_embeddings(vocab_size, num_units, embedding_name, hp, zero_pad=Tru
     weight variable: (V, E)
     '''
 
-    if hp.pretrain:
+    if hp.pretrain==0:
         with open(os.path.join(hp.pretrained_emb_path, '%s.emb' %(embedding_name)), 'rb') as f:
             emb_value = pickle.load(f)
 

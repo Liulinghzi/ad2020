@@ -1,7 +1,7 @@
 ###
  # @Author: your name
  # @Date: 2020-05-09 15:28:53
- # @LastEditTime: 2020-05-14 13:48:15
+ # @LastEditTime: 2020-05-14 13:51:27
  # @LastEditors: Please set LastEditors
  # @Description: In User Settings Edit
  # @FilePath: /ad2020/run.sh
@@ -11,6 +11,7 @@
 CUDA_VISIBLE_DEVICES=1 python3 train.py \
 --train_features_path ../../5-8/sample_train_features.pkl \
 --train_labels_path ../../5-8/sample_train_labels.pkl \
+--pretrained_emb_path ../../pre_embedding/emb \
 --vocab_list ../../5-8/sample_vocab_size_list.pkl \
 --num_heads 2 \
 --d_model 64 \
