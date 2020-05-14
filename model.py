@@ -157,7 +157,10 @@ class Transformer:
         target_logits, src_masks = self.encode(sparse_features, dense_features, labels, target_label=target_label)
         target = labels
 
-        target_ = label_smoothing(tf.one_hot(target, depth=self.hp.age_classes*self.hp.gender_classes))
+        if target_label == 'age':
+            target_ = label_smoothing(tf.one_hot(target, depth=self.hp.age_classes))
+        else:
+            target_ = label_smoothing(tf.one_hot(target, depth=self.hp.gender_classes))
         
         ce_target = tf.nn.softmax_cross_entropy_with_logits_v2(logits=target_logits, labels=target_)
         
