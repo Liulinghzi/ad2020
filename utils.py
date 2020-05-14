@@ -128,7 +128,7 @@ def save_variable_specs(fpath):
         fout.write("\n".join(params))
     logging.info("Variables info has been saved.")
 
-def calc_metric(sess, pred_target, target, num_eval_batches, num_eval_batches,num_eval_samples):
+def calc_metric(sess, pred_target, target, num_eval_batches, num_eval_samples):
     '''Gets hypotheses.
     num_batches: scalar.
     num_samples: scalar.

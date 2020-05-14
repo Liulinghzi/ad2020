@@ -1,7 +1,7 @@
 ###
  # @Author: your name
  # @Date: 2020-05-09 15:28:53
- # @LastEditTime: 2020-05-14 14:35:37
+ # @LastEditTime: 2020-05-14 15:18:29
  # @LastEditors: Please set LastEditors
  # @Description: In User Settings Edit
  # @FilePath: /ad2020/run.sh
@@ -35,7 +35,7 @@ CUDA_VISIBLE_DEVICES=1 python3 train.py \
 --d_ff 512 \
 --target_label gender \
 --pretrain 1 \
---trainable 0 \
+--trainable 1 \
 --logdir 2_64_3_512_gender_1_0
 
 

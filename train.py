@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-14 15:08:52
+@LastEditTime: 2020-05-14 15:19:24
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/train.py
@@ -85,7 +85,7 @@ with tf.Session() as sess:
             _, _eval_summaries = sess.run([eval_init_op, eval_summaries])
             summary_writer.add_summary(_eval_summaries, _gs)
 
-            acc = calc_metric(sess, pred_target, target, num_eval_batches, num_eval_batches,num_eval_samples)
+            acc = calc_metric(sess, pred_target, target, num_eval_batches, num_eval_samples)
             print('eval acc: ', acc)
 
             logging.info("# write results")
