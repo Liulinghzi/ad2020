@@ -23,7 +23,7 @@ class Hparams:
     parser.add_argument('--train_labels_path', default='iwslt2016/segmented/train.de.bpe',
                              help="german training segmented data")
                              
-    parser.add_argument('--pretrain', default=0, type=int
+    parser.add_argument('--pretrain', default=0, type=int, 
                              help="german training segmented data")
     parser.add_argument('--pretrained_emb_path', default='iwslt2016/segmented/train.de.bpe',
                              help="german training segmented data")
