@@ -10,6 +10,8 @@ Building blocks for Transformer
 
 import numpy as np
 import tensorflow as tf
+import pickle
+import os
 
 def ln(inputs, epsilon = 1e-8, scope="ln"):
     '''Applies layer normalization. See https://arxiv.org/abs/1607.06450.
@@ -32,7 +34,7 @@ def ln(inputs, epsilon = 1e-8, scope="ln"):
         
     return outputs
 
-def get_token_embeddings(vocab_size, num_units, embedding_name, zero_pad=True):
+def get_token_embeddings(vocab_size, num_units, embedding_name, hp, zero_pad=True):
     '''Constructs token embedding matrix.
     Note that the column of index 0's are set to zeros.
     vocab_size: scalar. V.
@@ -43,11 +45,15 @@ def get_token_embeddings(vocab_size, num_units, embedding_name, zero_pad=True):
     Returns
     weight variable: (V, E)
     '''
+    with open(os.path.join(hp.pretrained_emb_path, '%s.emb' %(embedding_name)), 'rb') as f:
+        emb_value = pickle.load(f)
+
     with tf.variable_scope("shared_weight_matrix"):
         embeddings = tf.get_variable(embedding_name,
                                    dtype=tf.float32,
                                    shape=(vocab_size, num_units),
-                                   initializer=tf.contrib.layers.xavier_initializer())
+                                   initializer=emb_value, 
+                                   trainable=False)
         if zero_pad:
             embeddings = tf.concat((tf.zeros(shape=[1, num_units]),
                                     embeddings[1:, :]), 0)
