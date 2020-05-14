@@ -154,7 +154,7 @@ class Transformer:
         y_hat: (N, T2)
         '''
 
-        target_logits, src_masks = self.encode(sparse_features, dense_features, labels, target_label)
+        target_logits, src_masks = self.encode(sparse_features, dense_features, labels, target_label=target_label)
         target = labels
 
         target_ = label_smoothing(tf.one_hot(target, depth=self.hp.age_classes*self.hp.gender_classes))
