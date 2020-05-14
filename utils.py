@@ -147,6 +147,7 @@ def calc_metric(sess, pred_target, target, num_eval_batches, num_eval_samples):
         target_value.extend(batch_target.tolist())
 
     pred_target_value = pred_target_value[:num_eval_samples]
+    print(pred_target_value )
     target_value = target_value[:num_eval_samples]
     return accuracy_score(target_value, pred_target_value)
     
