@@ -50,6 +50,8 @@ def get_token_embeddings(vocab_size, num_units, embedding_name, hp, zero_pad=Tru
         with open(os.path.join(hp.pretrained_emb_path, '%s.emb' %(embedding_name)), 'rb') as f:
             emb_value = pickle.load(f)
 
+        print('(',vocab_size, num_units,')')
+        print(emb_value.shape)
         with tf.variable_scope("shared_weight_matrix"):
             embeddings = tf.get_variable(embedding_name,
                                     dtype=tf.float32,
