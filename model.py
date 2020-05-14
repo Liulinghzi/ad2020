@@ -169,9 +169,9 @@ class Transformer:
         pred_target = tf.argmax(target_logits, axis=1) + 1
         # monitor a random sample
 
-        acc = tf.metrics.accuracy(labels=labels, predictions=pred_target)
+        # acc = tf.metrics.accuracy(labels=labels, predictions=pred_target)
         tf.summary.scalar("eval_loss", loss)
-        tf.summary.scalar("eval_acc", acc)
+        # tf.summary.scalar("eval_acc", acc)
         summaries = tf.summary.merge_all()
 
         return pred_target, target, summaries
