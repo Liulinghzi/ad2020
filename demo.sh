@@ -1,7 +1,7 @@
 ###
  # @Author: your name
  # @Date: 2020-05-09 15:28:53
- # @LastEditTime: 2020-05-14 15:21:04
+ # @LastEditTime: 2020-05-14 15:30:55
  # @LastEditors: Please set LastEditors
  # @Description: In User Settings Edit
  # @FilePath: /ad2020/run.sh
@@ -11,15 +11,18 @@
 CUDA_VISIBLE_DEVICES=1 python3 train.py \
 --train_features_path ../../5-8/sample_train_features.pkl \
 --train_labels_path ../../5-8/sample_train_labels.pkl \
+--eval_features_path ../../5-8/eval_features.pkl \
+--eval_labels_path ../../5-8/eval_labels.pkl \
 --pretrained_emb_path ../../pre_embedding/emb \
---vocab_list ../../5-8/sample_vocab_size_list.pkl \
+--vocab_list ../../5-8/vocab_size_list.pkl \
 --num_heads 2 \
 --d_model 64 \
 --num_blocks 3 \
---d_ff 512 \
+--d_ff 256 \
 --target_label gender \
---pretrain 0 \
---logdir 2_64_3_512_gender_0
+--pretrain 1 \
+--trainable 1 \
+--logdir 2_64_3_256_gender_1_1
 
 
 
@@ -34,11 +37,11 @@ CUDA_VISIBLE_DEVICES=1 python3 train.py \
 --num_heads 2 \
 --d_model 64 \
 --num_blocks 3 \
---d_ff 512 \
+--d_ff 256 \
 --target_label gender \
 --pretrain 1 \
 --trainable 1 \
---logdir 2_64_3_512_gender_1_0
+--logdir 2_64_3_256_gender_1_1
 
 
 # age训练

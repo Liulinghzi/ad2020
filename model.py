@@ -171,7 +171,7 @@ class Transformer:
 
         acc = tf.metrics.accuracy(labels=labels, predictions=pred_target)
         tf.summary.scalar("eval_loss", loss)
-        tf.summary.scalar("eval_loss", acc)
+        tf.summary.scalar("eval_acc", acc)
         summaries = tf.summary.merge_all()
 
         return pred_target, target, summaries
