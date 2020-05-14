@@ -55,7 +55,7 @@ def get_token_embeddings(vocab_size, num_units, embedding_name, hp, zero_pad=Tru
         with tf.variable_scope("shared_weight_matrix"):
             embeddings = tf.get_variable(embedding_name,
                                     dtype=tf.float32,
-                                    shape=(vocab_size, num_units),
+                                    # shape=(vocab_size, num_units),
                                     initializer=emb_value, 
                                     trainable=False)
             if zero_pad:
