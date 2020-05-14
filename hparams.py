@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-14 14:00:20
+@LastEditTime: 2020-05-14 14:39:33
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/hparams.py
@@ -25,6 +25,9 @@ class Hparams:
                              
     parser.add_argument('--pretrain', default=0, type=int, 
                              help="german training segmented data")
+    parser.add_argument('--trainable', default=0, type=int, 
+                             help="german training segmented data")
+            
     parser.add_argument('--pretrained_emb_path', default='iwslt2016/segmented/train.de.bpe',
                              help="german training segmented data")
     parser.add_argument('--target_label', default='age',
@@ -60,6 +63,13 @@ class Hparams:
                         help="label smoothing rate")
     parser.add_argument('--gender_classes', default=2, type=float,
                         help="label smoothing rate")
+
+
+    # val
+    parser.add_argument('--eval_features_path', default='iwslt2016/segmented/train.de.bpe',
+                             help="german training segmented data")
+    parser.add_argument('--eval_labels_path', default='iwslt2016/segmented/train.de.bpe',
+                             help="german training segmented data")
 
 
     # test

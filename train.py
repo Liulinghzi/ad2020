@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-14 13:10:12
+@LastEditTime: 2020-05-14 15:08:52
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/train.py
@@ -18,7 +18,7 @@ import tensorflow as tf
 from model import Transformer
 from tqdm import tqdm
 from data_load import get_batch
-from utils import save_hparams, save_variable_specs
+from utils import save_hparams, save_variable_specs, calc_metric
 import os
 from hparams import Hparams
 import math
@@ -37,19 +37,19 @@ save_hparams(hp, hp.logdir)
 
 logging.info("# Prepare train/eval batches")
 train_batches, num_train_batches, num_train_samples = get_batch(hp.train_features_path, hp.train_labels_path, hp.target_label, hp.maxlen, hp.batch_size, shuffle=True)
-# eval_batches, num_eval_batches, num_eval_samples = get_batch(hp.eval_features_path, hp.eval_labels_path, 100000 , hp.batch_size, shuffle=False)
+eval_batches, num_eval_batches, num_eval_samples = get_batch(hp.eval_features_path, hp.eval_labels_path, hp.target_label, hp.maxlen , hp.batch_size, shuffle=False)
 
 # create a iterator of the correct shape and type
 iter = tf.data.Iterator.from_structure(train_batches.output_types, train_batches.output_shapes)
 sparse_features, dense_features, labels = iter.get_next()
 
 train_init_op = iter.make_initializer(train_batches)
-# eval_init_op = iter.make_initializer(eval_batches)
+eval_init_op = iter.make_initializer(eval_batches)
 
 logging.info("# Load model")
 m = Transformer(hp)
 loss, train_op, global_step, train_summaries = m.train(sparse_features, dense_features, labels, hp.target_label)
-# age_hat, gender_hat, eval_summaries = m.eval(sparse_features, dense_features, labels)
+pred_target, target, eval_summaries = m.eval(sparse_features, dense_features, labels, hp.target_label)
 # pred_age, pred_gender,pred_age_gender = m.infer(sparse_features, dense_features)
 
 logging.info("# Session")
@@ -81,11 +81,12 @@ with tf.Session() as sess:
             _loss = sess.run(loss) # train loss
             print(_loss)
 
-            # logging.info("# test evaluation")
-            # _, _eval_summaries = sess.run([eval_init_op, eval_summaries])
-            # summary_writer.add_summary(_eval_summaries, _gs)
+            logging.info("# test evaluation")
+            _, _eval_summaries = sess.run([eval_init_op, eval_summaries])
+            summary_writer.add_summary(_eval_summaries, _gs)
 
-            # calc_metric(sess, age_hat, gender_hat, labels)
+            acc = calc_metric(sess, pred_target, target, num_eval_batches, num_eval_batches,num_eval_samples)
+            print('eval acc: ', acc)
 
             logging.info("# write results")
             model_output = "ckpt_%02d" % (epoch)

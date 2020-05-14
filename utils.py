@@ -13,6 +13,7 @@ import tensorflow as tf
 # import numpy as np
 import json
 import os, re
+from sklearn.metrics import accuracy_score
 import logging
 
 logging.basicConfig(level=logging.ERROR)
@@ -127,7 +128,7 @@ def save_variable_specs(fpath):
         fout.write("\n".join(params))
     logging.info("Variables info has been saved.")
 
-def calc_metric(sess, age_hat, gender_hat, labels):
+def calc_metric(sess, pred_target, target, num_eval_batches, num_eval_batches,num_eval_samples):
     '''Gets hypotheses.
     num_batches: scalar.
     num_samples: scalar.
@@ -138,12 +139,18 @@ def calc_metric(sess, age_hat, gender_hat, labels):
     Returns
     hypotheses: list of sents
     '''
-    ah, gh, clabels = sess.run([age_hat, gender_hat, labels])
-    import numpy as np
-    true_age = np.mod(clabels - 1, 10) + 1
-    true_gender = np.ceil((clabels)/10)
-    from sklearn.metrics import accuracy_score
-    print('age val acc: %.2f,  gender val acc:  %.2f' % (accuracy_score(true_age, ah), accuracy_score(true_gender, gh)))
+    pred_target_value = []
+    target_value = []
+    for b in range(num_eval_batches):
+        batch_pred_target, batch_target = sess.run([pred_target, target])
+        pred_target_value.extend(batch_pred_target.tolist())
+        target_value.extend(batch_target.tolist())
+
+    pred_target_value = pred_target_value[:num_eval_samples]
+    target_value = target_value[:num_eval_samples]
+    return accuracy_score(target_value, pred_target_value)
+    
+
 
 def calc_bleu(ref, translation):
     '''Calculates bleu score and appends the report to translation
