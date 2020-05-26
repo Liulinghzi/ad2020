@@ -62,9 +62,9 @@ class Transformer:
             print('product_category_enc', product_category_enc.shape)
             print('advertiser_id_enc', advertiser_id_enc.shape)
             print('industry_enc', industry_enc.shape)
-
-            for enc in encs:
-                enc *= self.hp.d_model**0.5 # scale
+            d_models = [int(d.strip()) for d in self.hp.d_model.split(',')]
+            for idx, enc in enumerate(encs):
+                enc *= d_models[idx]**0.5 # scale
                 enc += positional_encoding(enc, self.hp.maxlen)
                 enc = tf.layers.dropout(enc, self.hp.dropout_rate, training=training)
 
