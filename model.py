@@ -71,7 +71,7 @@ class Transformer:
             time = tf.stack([time]*8, -1)
             click_times = tf.stack([click_times]*8, -1)
             # tf.expand_dims(time, -1)
-            click_times = tf.expand_dims(click_times, -1)
+            # click_times = tf.expand_dims(click_times, -1)
             print('time', time.shape)
             print('click_times', click_times.shape)
 
