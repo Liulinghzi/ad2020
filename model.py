@@ -106,7 +106,9 @@ class Transformer:
 
         age_enc = tf.reduce_sum(age_enc, axis=1)
         print('age_enc', age_enc.shape)
+        print(5)
         age_logits = tf.layers.dense(age_enc, self.hp.age_classes)        
+        print(6)
         
         return age_logits, src_masks
 
