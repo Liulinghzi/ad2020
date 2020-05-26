@@ -176,29 +176,20 @@ def multihead_attention(queries, keys, values, key_masks,
         Q = tf.layers.dense(queries, d_model, use_bias=True) # (N, T_q, d_model)
         K = tf.layers.dense(keys, d_model, use_bias=True) # (N, T_k, d_model)
         V = tf.layers.dense(values, d_model, use_bias=True) # (N, T_k, d_model)
-        print(queries.shape)
-        print(keys.shape)
-        print(values.shape)
-        print(d_model)
-        print(1)
         
         # Split and concat
         Q_ = tf.concat(tf.split(Q, num_heads, axis=2), axis=0) # (h*N, T_q, d_model/h)
         K_ = tf.concat(tf.split(K, num_heads, axis=2), axis=0) # (h*N, T_k, d_model/h)
         V_ = tf.concat(tf.split(V, num_heads, axis=2), axis=0) # (h*N, T_k, d_model/h)
-        print(2)
 
         # Attention
         outputs = scaled_dot_product_attention(Q_, K_, V_, key_masks, causality, dropout_rate, training)
-        print(3)
 
         # Restore shape
         outputs = tf.concat(tf.split(outputs, num_heads, axis=0), axis=2 ) # (N, T_q, d_model)
-        print(4)
               
         # Residual connection
         outputs += queries
-        print(4)
               
         # Normalize
         outputs = ln(outputs)

@@ -127,7 +127,7 @@ def save_variable_specs(fpath):
         fout.write("\n".join(params))
     logging.info("Variables info has been saved.")
 
-def calc_metric(sess, age_hat, gender_hat, labels):
+def calc_metric(sess, age_hat, labels):
     '''Gets hypotheses.
     num_batches: scalar.
     num_samples: scalar.
@@ -138,12 +138,10 @@ def calc_metric(sess, age_hat, gender_hat, labels):
     Returns
     hypotheses: list of sents
     '''
-    ah, gh, clabels = sess.run([age_hat, gender_hat, labels])
+    pred_age, true_age = sess.run([age_hat, labels])
     import numpy as np
-    true_age = np.mod(clabels - 1, 10) + 1
-    true_gender = np.ceil((clabels)/10)
     from sklearn.metrics import accuracy_score
-    print('age val acc: %.2f,  gender val acc:  %.2f' % (accuracy_score(true_age, ah), accuracy_score(true_gender, gh)))
+    print('age val acc: %.2f' % (accuracy_score(true_age, pred_age)))
 
 def calc_bleu(ref, translation):
     '''Calculates bleu score and appends the report to translation
