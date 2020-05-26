@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-26 17:33:43
+@LastEditTime: 2020-05-26 18:10:01
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/hparams.py
@@ -44,7 +44,7 @@ class Hparams:
                         help="number of encoder/decoder blocks")
     parser.add_argument('--num_heads', default=8, type=int,
                         help="number of attention heads")
-    parser.add_argument('--maxlen', default=100, type=int,
+    parser.add_argument('--maxlen', default=60, type=int,
                         help="maximum length of a source sequence")
     parser.add_argument('--dropout_rate', default=0.3, type=float)
     parser.add_argument('--smoothing', default=0.1, type=float,
