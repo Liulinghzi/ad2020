@@ -173,6 +173,10 @@ def multihead_attention(queries, keys, values, key_masks,
     d_model = queries.get_shape().as_list()[-1]
     with tf.variable_scope(scope, reuse=tf.AUTO_REUSE):
         # Linear projections
+        print(queries.shape)
+        print(keys.shape)
+        print(values.shape)
+        print(d_model)
         Q = tf.layers.dense(queries, d_model, use_bias=True) # (N, T_q, d_model)
         K = tf.layers.dense(keys, d_model, use_bias=True) # (N, T_k, d_model)
         V = tf.layers.dense(values, d_model, use_bias=True) # (N, T_k, d_model)
