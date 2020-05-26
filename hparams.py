@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-26 18:10:01
+@LastEditTime: 2020-05-26 18:41:48
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/hparams.py
@@ -22,8 +22,12 @@ class Hparams:
                              help="german training segmented data")
     parser.add_argument('--train_labels_path', default='iwslt2016/segmented/train.de.bpe',
                              help="german training segmented data")
-    parser.add_argument('--eval', default='iwslt2016/segmented/eval.de.bpe',
-                             help="german evaluation segmented data")
+    parser.add_argument('--eval_features_path', default='iwslt2016/segmented/train.de.bpe',
+                             help="german training segmented data")
+    parser.add_argument('--eval_labels_path', default='iwslt2016/segmented/train.de.bpe',
+                             help="german training segmented data")
+    # parser.add_argument('--eval', default='iwslt2016/segmented/eval.de.bpe',
+    #                          help="german evaluation segmented data")
 
     # training scheme
     parser.add_argument('--batch_size', default=128, type=int)
