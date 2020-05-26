@@ -27,9 +27,9 @@ class Transformer:
         # self.embedding_creative_id = get_token_embeddings(self.hp.vocab_list[0], self.hp.d_model, 'creative_id', zero_pad=True)
         # self.embedding_ad_id = get_token_embeddings(self.hp.vocab_list[1], self.hp.d_model, 'ad_id', zero_pad=True)
         self.embedding_product_id = get_token_embeddings(self.hp.vocab_list[0], d_models[0], 'product_id', zero_pad=True)
-        self.embedding_product_category = get_token_embeddings(self.hp.vocab_list[1], hp.d_models[1], 'product_category', zero_pad=True)
-        self.embedding_advertiser_id = get_token_embeddings(self.hp.vocab_list[2], hp.d_models[2], 'advertiser_id', zero_pad=True)
-        self.embedding_industry = get_token_embeddings(self.hp.vocab_list[3], hp.d_models[3], 'industry', zero_pad=True)
+        self.embedding_product_category = get_token_embeddings(self.hp.vocab_list[1], d_models[1], 'product_category', zero_pad=True)
+        self.embedding_advertiser_id = get_token_embeddings(self.hp.vocab_list[2], d_models[2], 'advertiser_id', zero_pad=True)
+        self.embedding_industry = get_token_embeddings(self.hp.vocab_list[3], d_models[3], 'industry', zero_pad=True)
         '''
         这里就不只是一个embeddings了而是
         self.embedding_dict = {feat: get_token_embeddings for feat in features}
