@@ -1,7 +1,7 @@
 ###
  # @Author: your name
  # @Date: 2020-05-09 15:28:53
- # @LastEditTime: 2020-05-26 18:43:29
+ # @LastEditTime: 2020-05-26 19:13:18
  # @LastEditors: Please set LastEditors
  # @Description: In User Settings Edit
  # @FilePath: /ad2020/run.sh
@@ -18,8 +18,22 @@ python3 train.py \
 --num_heads 2 \
 --d_model 64,16,64,32 \
 --num_blocks 3 \
---d_ff 256
-# CUDA_VISIBLE_DEVICES=1 python3 train.py  --train_features_path ../../5-8/train_features.pkl  --train_labels_path ../../5-8/train_labels.pkl --vocab_list ../../5-8/vocab_size_list.pkl --num_heads 8 --d_model 64,16,64,32 --num_blocks 3 --d_ff 256 --maxlen 60
+--d_ff 256 \
+--logdir log/
+
+CUDA_VISIBLE_DEVICES=1 \
+python3 train.py \
+--train_features_path ../../5-8/train_features.pkl \
+--train_labels_path ../../5-8/train_labels.pkl \
+--eval_features_path ../../5-8/eval_features.pkl \
+--eval_labels_path ../../5-8/eval_labels.pkl \
+--vocab_list ../../5-8/vocab_size_list.pkl \
+--num_heads 4 \
+--d_model 64,16,64,32 \
+--num_blocks 3 \
+--d_ff 256 \
+--maxlen 60 \
+--logdir log/
 
 
 

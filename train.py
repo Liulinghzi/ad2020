@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-26 19:09:51
+@LastEditTime: 2020-05-26 19:12:58
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/train.py
@@ -32,7 +32,7 @@ logging.info("# hparams")
 hparams = Hparams()
 parser = hparams.parser
 hp = parser.parse_args()
-hp.logdir = hp.logdir + 'head:%d_dim:%s_block:%d_ff:%d'
+hp.logdir = hp.logdir + 'head:%d_dim:%s_block:%d_ff:%d' % (hp.num_heads, hp.d_model, hp.num_blocks, hp.d_ff)
 save_hparams(hp, hp.logdir)
 
 
