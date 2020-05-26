@@ -23,12 +23,13 @@ class Transformer:
         with open(self.hp.vocab_list, 'rb') as f:
             self.hp.vocab_list = pickle.load(f)
         # 前两个特征是dense，1维
+        d_models = [int(d.strip()) for d in self.hp.d_model.split(',')]
         # self.embedding_creative_id = get_token_embeddings(self.hp.vocab_list[0], self.hp.d_model, 'creative_id', zero_pad=True)
         # self.embedding_ad_id = get_token_embeddings(self.hp.vocab_list[1], self.hp.d_model, 'ad_id', zero_pad=True)
-        self.embedding_product_id = get_token_embeddings(self.hp.vocab_list[0], self.hp.d_model, 'product_id', zero_pad=True)
-        self.embedding_product_category = get_token_embeddings(self.hp.vocab_list[1], self.hp.d_model, 'product_category', zero_pad=True)
-        self.embedding_advertiser_id = get_token_embeddings(self.hp.vocab_list[2], self.hp.d_model, 'advertiser_id', zero_pad=True)
-        self.embedding_industry = get_token_embeddings(self.hp.vocab_list[3], self.hp.d_model, 'industry', zero_pad=True)
+        self.embedding_product_id = get_token_embeddings(self.hp.vocab_list[0], d_models[0], 'product_id', zero_pad=True)
+        self.embedding_product_category = get_token_embeddings(self.hp.vocab_list[1], hp.d_models[1], 'product_category', zero_pad=True)
+        self.embedding_advertiser_id = get_token_embeddings(self.hp.vocab_list[2], hp.d_models[2], 'advertiser_id', zero_pad=True)
+        self.embedding_industry = get_token_embeddings(self.hp.vocab_list[3], hp.d_models[3], 'industry', zero_pad=True)
         '''
         这里就不只是一个embeddings了而是
         self.embedding_dict = {feat: get_token_embeddings for feat in features}
@@ -67,7 +68,9 @@ class Transformer:
                 enc += positional_encoding(enc, self.hp.maxlen)
                 enc = tf.layers.dropout(enc, self.hp.dropout_rate, training=training)
 
-            time = tf.expand_dims(time, -1)
+            time = tf.stack([time]*8, -1)
+            click_times = tf.stack([click_times]*8, -1)
+            # tf.expand_dims(time, -1)
             click_times = tf.expand_dims(click_times, -1)
             print('time', time.shape)
             print('click_times', click_times.shape)

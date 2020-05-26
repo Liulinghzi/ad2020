@@ -1,7 +1,7 @@
 '''
 @Author: your name
 @Date: 2019-09-23 18:54:24
-@LastEditTime: 2020-05-12 20:24:22
+@LastEditTime: 2020-05-26 17:33:43
 @LastEditors: Please set LastEditors
 @Description: In User Settings Edit
 @FilePath: /transformer-master/hparams.py
@@ -36,7 +36,7 @@ class Hparams:
     parser.add_argument('--evaldir', default="eval/1", help="evaluation dir")
 
     # model
-    parser.add_argument('--d_model', default=512, type=int,
+    parser.add_argument('--d_model', default='64, 16, 64, 32', type=str,
                         help="hidden dimension of encoder/decoder")
     parser.add_argument('--d_ff', default=2048, type=int,
                         help="hidden dimension of feedforward layer")
