@@ -138,7 +138,8 @@ def calc_metric(sess, age_hat, labels):
     Returns
     hypotheses: list of sents
     '''
-    pred_age, true_age = sess.run([age_hat, labels])
+    # pred_age, true_age = sess.run([age_hat, labels])
+    pred_age = sess.run([age_hat])
     import numpy as np
     from sklearn.metrics import accuracy_score
     print('age val acc: %.2f' % (accuracy_score(true_age, pred_age)))
