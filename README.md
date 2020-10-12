@@ -6,4 +6,4 @@
  * @Description: In User Settings Edit
  * @FilePath: /ad2020/README.md
  -->
-# 把用户一次点击的所有特征作为序列的一步，一个用户的所有点击作为一个序列，进行文本分类
+ <iframe height=498 width=510 src='https://s3.cn-north-1.jdcloud-oss.com/aitp/docs/movies/服务编排.mp4' frameborder=0 'allowfullscreen'></iframe>
